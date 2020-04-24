@@ -51,18 +51,17 @@ module ContextualizedLogs
         #   span_id: 2
         # },
         # ddsource: ['ruby'],
-        syslog: { env: 'test', host: 'a' },
+        syslog: { env: 'test', host: Socket.gethostname },
         type: 'INFO',
         log_type: 'log',
         message: 'hello'
       })
     end
 
-    xit 'includes stack' do
+    it 'includes stack' do
       subject.info "hello"
 
-      puts "logs[:stack]: #{logs[:stack]}"
-      expect(logs[:stack].any? { |line| line.include?('/spec/database/contextualized_logger_spec.rb') }).to eq(true)
+      expect(logs[:stack].any? { |line| line.include?('/spec/contextualized_logs/contextualized_logger_spec.rb') }).to eq(true)
     end
 
     it 'format exception' do

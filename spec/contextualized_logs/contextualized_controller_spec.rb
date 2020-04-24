@@ -1,59 +1,98 @@
 # coding: utf-8
 require "rails_helper"
 
+class DummyController < ActionController::Base
+   include ContextualizedLogs::ContextualizedController
+
+   def show
+     Model.last
+     render json: {}
+   end
+end
+
+class ContextualizedModelDummyController < ActionController::Base
+   include ContextualizedLogs::ContextualizedController
+   contextualized_model true
+
+   def show
+     Model.last
+     render json: {}
+   end
+end
+
 module ContextualizedLogs
 
-  class Controller < ActionController::Base
-     include ContextualizedController
+  RSpec.describe DummyController, type: :controller do
+    let(:params) { { a: 'a' } }
+    let!(:model) { FactoryBot.create(:model, value: 'value') }
+    let(:current_context) { CurrentContext}
 
-     def action_name
-       'action'
-     end
+    before do
+      Rails.application.routes.draw {
+        get 'dummy' => 'dummy#show'
+      }
+    end
 
-     def before_action(names, block)
-     end
+    it 'should set request details' do
+      expect_any_instance_of(DummyController).to receive(:contextualize_requests)
+      get :show, params: params
+    end
+
+    it 'should NOT set enable model context values' do
+      get :show, params: params
+      expect(current_context.contextualized_model_enabled).to eq(false)
+      expect(current_context.context_values).to eq(nil)
+    end
+
+    it 'should set resource_name' do
+      get :show, params: params
+      expect(current_context.resource_name).to eq('dummycontroller_show')
+    end
+
+    it 'should set request details' do
+      %w[user-agent referer origin].each do |header|
+          @request.headers[header] = header
+      end
+      allow_any_instance_of(ActionDispatch::Request).to receive(:remote_addr).and_return('192.168.0.0')
+      allow_any_instance_of(ActionDispatch::Request).to receive(:remote_ip).and_return('192.168.0.1')
+      allow_any_instance_of(ActionDispatch::Request).to receive(:ip).and_return('192.168.0.2')
+      allow_any_instance_of(ActionDispatch::Request).to receive(:x_forwarded_for).and_return(['192.168.0.3', '192.168.0.4'])
+      allow_any_instance_of(ActionDispatch::Request).to receive(:xhr?).and_return(true)
+      allow_any_instance_of(ActionDispatch::Request).to receive(:uuid).and_return('request_uuid')
+
+      get :show, params: params
+
+      expect(current_context.request_uuid).to eq('request_uuid')
+      expect(current_context.request_origin).to eq('origin')
+      expect(current_context.request_referer).to eq('referer')
+      expect(current_context.request_remote_addr).to eq('192.168.0.0')
+      expect(current_context.request_remote_ip).to eq('192.168.0.1')
+      expect(current_context.request_ip).to eq('192.168.0.2')
+      expect(current_context.request_x_forwarded_for).to eq(['192.168.0.3', '192.168.0.4'])
+      expect(current_context.request_xhr).to eq('true')
+    end
   end
 
-  RSpec.describe ContextualizedController do
-    describe '.contextualize_requests' do
-      it 'should set request details' do
-        fake_controller = Controller.new
-        fake_request = double('request',
-          uuid: 'uuid',
-          origin: 'origin',
-          user_agent: 'user_agent',
-          referer: 'referer',
-          ip: 'ip',
-          remote_ip: 'remote_ip',
-          remote_addr: 'remote_addr',
-          x_forwarded_for: 'x_forwarded_for',
-          xhr?: true
-        )
-        fake_logger = double('logger')
-        allow(fake_controller).to receive(:request).and_return(fake_request)
+  RSpec.describe ContextualizedModelDummyController, type: :controller do
+    let(:params) { { a: 'a' } }
+    let!(:model) { FactoryBot.create(:model, value: 'value') }
+    let(:current_context) { CurrentContext}
+    
+    before do
+      routes.draw {
+        get 'dummy' => 'contextualized_model_dummy#show'
+      }
+    end
 
-        allow(fake_controller).to receive(:logger).and_return(fake_logger)
-        allow(fake_logger).to receive(:dump_error)
-        fake_controller.contextualize_requests
-        expect(CurrentContext.context).to eq(
-          resource_name: 'contextualizedlogs::controller_action',
-            http: {
-              origin: 'origin',
-              referer: 'referer',
-              request_id: 'uuid',
-              useragent: 'user_agent',
-            },
-            network: {
-              client: {
-                ip: 'ip',
-                remote_ip: 'remote_ip',
-                remote_addr: 'remote_addr',
-                x_forwarded_for: 'x_forwarded_for'
+    it 'should set request details' do
+      expect_any_instance_of(ContextualizedModelDummyController).to receive(:contextualize_requests)
+      get :show, params: params
+    end
 
-              }
-            }
-        )
-      end
+    it 'should set enable model context values' do
+      get :show, params: params
+      expect(current_context.contextualized_model_enabled).to eq(true)
+      expect(current_context.context_values).to eq(values: ['value'])
     end
   end
 end

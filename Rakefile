@@ -15,10 +15,9 @@ RDoc::Task.new(:rdoc) do |rdoc|
 end
 
 require 'bundler/gem_tasks'
-
 require "rspec/core/rake_task"
 
-RSpec::Core::RakeTask.new(:spec)
+# RSpec::Core::RakeTask.new(:spec)
 #
 task :default => :spec
 # # Add your own tasks in files placed in lib/tasks ending in .rake,

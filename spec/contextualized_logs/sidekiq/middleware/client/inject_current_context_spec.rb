@@ -29,7 +29,7 @@ module ContextualizedLogs
       current_context.request_uuid = 1
     end
 
-    RSpec.shared_examples 'it yield' do
+    RSpec.shared_examples 'it client yield' do
       it do
         yielded = false
         subject.call(worker_class, {}, '', nil) do
@@ -45,7 +45,7 @@ module ContextualizedLogs
       context 'with uncontextualized worker' do
         let(:worker_class) { DummyWorker }
 
-        it_behaves_like 'it yield'
+        it_behaves_like 'it client yield'
 
         it 'DOES NOT change job context' do
           job = {'jid' => 1}
@@ -70,7 +70,7 @@ module ContextualizedLogs
       context 'with contextualized worker' do
         let(:worker_class) { ContextualizedModelDummyWorker }
 
-        it_behaves_like 'it yield'
+        it_behaves_like 'it client yield'
 
         it 'DOES change job context' do
           job = { 'jid' => 1 }

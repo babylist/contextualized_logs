@@ -245,26 +245,24 @@ curl http://localhost/users/1
 
 ## Demo
 
- $ bundle install
- $ bin/rails server
- $ tail -f log/development
- $ curl
+### start rails
  ```
- bundle install
+ bin/setup
  bin/rails server
  ```
 
+### tail logs
  ```
  tail -f log/development
  ```
 
+### do some requests
  ```
 curl -X POST -d '{"value": "value"}' -H 'Content-Type: application/json' "http://localhost:3000/model"
 curl "http://localhost:3000/model/1"
 curl "http://localhost:3000/model"
 curl -X DELETE "http://localhost:3000/model/1"
 ```
-
 
 ## Usage
 
@@ -351,13 +349,23 @@ $ bundle install
 ## Specs
 
 ```
-ContextualizedLogs::ContextualizedController
-  .contextualize_requests
-    should set request details
+$ rake
+The dependency tzinfo-data (>= 0) will be unused by any of the platforms Bundler is installing for. Bundler is installing for ruby but the dependency is only for x86-mingw32, x86-mswin32, x64-mingw32, java. To add those platforms to the bundle, run `bundle lock --add-platform x86-mingw32 x86-mswin32 x64-mingw32 java`.
+/Users/hugues/.rvm/rubies/ruby-2.5.1/bin/ruby -I/Users/hugues/.rvm/gems/ruby-2.5.1/gems/rspec-core-3.8.2/lib:/Users/hugues/.rvm/gems/ruby-2.5.1/gems/rspec-support-3.8.3/lib /Users/hugues/.rvm/gems/ruby-2.5.1/gems/rspec-core-3.8.2/exe/rspec --pattern spec/\*\*\{,/\*/\*\*\}/\*_spec.rb
+
+DummyController
+  should set request details
+  should NOT set enable model context values
+  should set resource_name
+  should set request details
+
+ContextualizedModelDummyController
+  should set request details
+  should set enable model context values
 
 ContextualizedLogs::ContextualizedLogger
   format log
-  includes stack (PENDING: Temporarily skipped with xit)
+  includes stack
   format exception
   inject context
   dump
@@ -373,31 +381,6 @@ ContextualizedLogs::ContextualizedModel
       set contextualizable values
     with contextualized_model_enabled == false
       set contextualizable values
-
-ContextualizedLogs
-  has a version number
-
-Pending: (Failures listed here are expected and do not affect your suite's status)
-
-  1) ContextualizedLogs::ContextualizedLogger includes stack
-     # Temporarily skipped with xit
-     # ./spec/contextualized_logs/contextualized_logger_spec.rb:61
-
-
-Finished in 0.01959 seconds (files took 0.89851 seconds to load)
-12 examples, 0 failures, 1 pending
-
-DummyController
-  should set request details
-  should NOT set enable model context values
-  should set resource_name
-  should set request details
-
-ContextualizedModelDummyController
-  should set request details
-  should set enable model context values
-
-ContextualizedLogs::ContextualizedModel
   with CurrentContext.contextualized_model_enabled == true
     behaves like after_create context
       .after_create
@@ -419,12 +402,12 @@ ContextualizedLogs::Sidekiq::Middleware::Client::InjectCurrentContext
       DOES NOT change job context
       DOES NOT log job enqueued
       DOES NOT enable model context values
-      behaves like it yield
+      behaves like it client yield
         should eq true
     with contextualized worker
       DOES change job context
       DOES log job enqueued
-      behaves like it yield
+      behaves like it client yield
         should eq true
       with contextualized model
         DOES enable model context values
@@ -433,12 +416,12 @@ ContextualizedLogs::Sidekiq::Middleware::Server::RestoreCurrentContext
   with uncontextualized worker
     DOES NOT log job
     DOES NOT log job failure
-    behaves like it yield
+    behaves like it server yield
       should eq true
     behaves like enable model context values
       enable model context values
   with contextualized worker
-    behaves like it yield
+    behaves like it server yield
       should eq true
     behaves like log job failure
       log job failure
@@ -447,7 +430,7 @@ ContextualizedLogs::Sidekiq::Middleware::Server::RestoreCurrentContext
     behaves like enable model context values
       enable model context values
   with contextualized model worker
-    behaves like it yield
+    behaves like it server yield
       should eq true
     behaves like log job failure
       log job failure
@@ -457,7 +440,7 @@ ContextualizedLogs::Sidekiq::Middleware::Server::RestoreCurrentContext
       enable model context values
   with contextualized model worker
     log with args
-    behaves like it yield
+    behaves like it server yield
       should eq true
     behaves like log job failure
       log job failure
@@ -466,8 +449,11 @@ ContextualizedLogs::Sidekiq::Middleware::Server::RestoreCurrentContext
     behaves like enable model context values
       enable model context values
 
-Finished in 0.29379 seconds (files took 1.35 seconds to load)
-35 examples, 0 failures
+ContextualizedLogs
+  has a version number
+
+Finished in 0.73283 seconds (files took 1.34 seconds to load)
+46 examples, 0 failures
 ```
 
 ## Development

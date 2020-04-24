@@ -1,17 +1,12 @@
 require 'rails_helper'
-require 'active_record'
 
 module ContextualizedLogs
   RSpec.describe ContextualizedModel do
-    class Model < ActiveRecord::Base
-      include ContextualizedModel
-      contextualizable keys: { values: :value }
-    end
+    let(:current_context) { CurrentContext }
+    let(:contextualized_model_enabled) { true }
 
-    class FakeModel
-      def value
-        'value'
-      end
+    before do
+      current_context.contextualized_model_enabled = contextualized_model_enabled
     end
 
     describe '.contextualizable' do
@@ -22,12 +17,8 @@ module ContextualizedLogs
 
     describe '.contextualize' do
       subject do
-        model = FakeModel.new
+        model = FactoryBot.create(:model, value: 'value')
         described_class.send(:contextualize, model, Model.contextualizable_keys, CurrentContext)
-      end
-
-      before do
-        CurrentContext.contextualized_model_enabled = contextualized_model_enabled
       end
 
       context 'with contextualized_model_enabled == true' do
@@ -35,7 +26,7 @@ module ContextualizedLogs
 
         it 'set contextualizable values' do
           subject
-          expect(CurrentContext.context_values).to eq(values: ['value'])
+          expect(current_context.context_values).to eq(values: ['value'])
         end
       end
 
@@ -44,70 +35,45 @@ module ContextualizedLogs
 
         it 'set contextualizable values' do
           subject
-          expect(CurrentContext.context_values).to eq(nil)
+          expect(current_context.context_values).to eq(nil)
         end
       end
 
     end
 
-    # context 'with contextualized_model_enabled' do
-    #   before do
-    #     CurrentContext.contextualized_model_enabled = true
-    #   end
-    #
-    #   describe '.after_find' do
-    #     it 'contextualize values' do
-    #       model = FakeModel.new
-    #       puts Model.__callbacks.inspect
-    #       Model.run_callbacks(:after_find)
-    #       expect(CurrentContext.context_values).to eq(values: :value)
-    #     end
-    #   end
-    # end
-    #
-    # context 'when context enabled' do
-    #   before do
-    #     CurrentContext.contextualized_model_enabled = true
-    #   end
-    #
-    #   describe 'find' do
-    #     let!(:user) { create(:user) }
-    #
-    #     it 'contextualize' do
-    #       BLRegistry::User.last
-    #       expect(CurrentContext.context_values).to eq(user_ids: [user.id])
-    #     end
-    #   end
-    #
-    #   describe 'create' do
-    #     it 'contextualize' do
-    #       user = create(:user)
-    #       expect(CurrentContext.context_values).to eq(user_ids: [user.id])
-    #     end
-    #   end
-    # end
-    #
-    # context 'when context disabled (default)' do
-    #   before do
-    #     # default
-    #     # CurrentContext.context_enabled = true
-    #   end
-    #
-    #   describe 'find' do
-    #     let!(:user) { create(:user) }
-    #
-    #     it 'does NOT contextualize' do
-    #       BLRegistry::User.last
-    #       expect(CurrentContext.context_values).not_to eq(user_ids: [user.id])
-    #     end
-    #   end
-    #
-    #   describe 'create' do
-    #     it 'does NOT contextualize' do
-    #       user = create(:user)
-    #       expect(CurrentContext.context_values).not_to eq(user_ids: [user.id])
-    #     end
-    #   end
-    # end
+    RSpec.shared_examples 'after_find context' do |context|
+      describe '.after_find' do
+        it 'does' do
+          model = FactoryBot.create(:model, value: 'a')
+          current_context.reset
+          current_context.contextualized_model_enabled = contextualized_model_enabled
+          Model.find(model.id)
+          expect(current_context.context_values).to eq(context)
+        end
+      end
+    end
+
+    RSpec.shared_examples 'after_create context' do |context|
+      describe '.after_create' do
+        it 'set context' do
+          FactoryBot.create(:model, value: 'a')
+          expect(current_context.context_values).to eq(context)
+        end
+      end
+    end
+
+    context 'with CurrentContext.contextualized_model_enabled == true' do
+      let(:contextualized_model_enabled) { true }
+
+      it_behaves_like 'after_create context', { values: ['a'] }
+      it_behaves_like 'after_find context', { values: ['a'] }
+    end
+
+    context 'with CurrentContext.contextualized_model_enabled == false' do
+      let(:contextualized_model_enabled) { false }
+
+      it_behaves_like 'after_create context', nil
+      it_behaves_like 'after_find context', nil
+    end
   end
 end

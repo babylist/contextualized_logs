@@ -52,7 +52,7 @@ module ContextualizedLogs
       allow(Rails).to receive(:logger).and_return(contextualized_logger)
     end
 
-    RSpec.shared_examples 'it yield' do
+    RSpec.shared_examples 'it server yield' do
       it do
         yielded = false
         worker = worker_class.new
@@ -120,7 +120,7 @@ module ContextualizedLogs
     context 'with uncontextualized worker' do
       let(:worker_class) { DummyWorker }
 
-      it_behaves_like 'it yield'
+      it_behaves_like 'it server yield'
 
       it 'DOES NOT log job' do
         expect(Rails.logger).not_to receive(:info).with('sidekiq: performing job ContextualizedLogs::DummyWorker: 1, on queue ')
@@ -148,7 +148,7 @@ module ContextualizedLogs
     context 'with contextualized worker' do
       let(:worker_class) { ContextualizedDummyWorker }
 
-      it_behaves_like 'it yield'
+      it_behaves_like 'it server yield'
       it_behaves_like 'log job failure'
       it_behaves_like 'log with context'
       it_behaves_like 'enable model context values', false, nil
@@ -157,7 +157,7 @@ module ContextualizedLogs
     context 'with contextualized model worker' do
       let(:worker_class) { ContextualizedModelDummyWorker }
 
-      it_behaves_like 'it yield'
+      it_behaves_like 'it server yield'
       it_behaves_like 'log job failure'
       it_behaves_like 'log with context'
       it_behaves_like 'enable model context values', true, { values: ['value']}
@@ -166,7 +166,7 @@ module ContextualizedLogs
     context 'with contextualized model worker' do
       let(:worker_class) { ContextualizedArgsDummyWorker }
 
-      it_behaves_like 'it yield'
+      it_behaves_like 'it server yield'
       it_behaves_like 'log job failure'
       it_behaves_like 'log with context'
       it_behaves_like 'enable model context values', false, nil

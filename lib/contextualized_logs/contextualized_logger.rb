@@ -39,10 +39,10 @@ module ContextualizedLogs
           type: severity.to_s,
           time: timestamp
         }
-        # data[:stack] = Kernel.caller.
-        #   # map { |caller| caller.gsub(/#{Rails.root}/, '') }.
-        #   # reject { |caller| caller.start_with?('/usr/local') || caller.include?('/shared/bundle/') || caller.start_with?('/Users/') }.
-        #   first(15)
+        data[:stack] = Kernel.caller.
+          map { |caller| caller.gsub(/#{Rails.root}/, '') }.
+          reject { |caller| caller.start_with?('/usr/local') || caller.include?('/shared/bundle/') || caller.start_with?('/Users/') }.
+          first(15)
         data[:log_type] = 'log'
         data.merge!(parse_msg(msg)) # parse message (string, hash, error, ...)
         data.merge!(current_context) # merge current request context
