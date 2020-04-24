@@ -43,7 +43,7 @@ In order to enrich your logs, you needs to use (subclass of `ActiveSupport::Logg
 Rails.application.configure do
   config.logger = ContextualizedLogs::ContextualizedLogger.new("log/#{Rails.env}.log")
 end
-```
+````
 
 ### ContextualizedController
 
@@ -60,12 +60,36 @@ end
 ```
 class Model < ActiveRecord::Base
   include ContextualizedLogs::ContextualizedModel
+
+  # cherry picking which model value/column should be added to CurrentContext metadata
   contextualizable keys: {model_ids: :id}
 end
 ```
 
 If `ContextualizedLogs::CurrentContext.contextualized_model_enabled` is enable on the current tread, any Model which is created or find will add `{ context_values: { model_ids: ids } }`.
 So if you fetch model (`id == 1`), and create model (`id == 2`), your logs will now contain `{ context_values: { model_ids: [1, 2] } }`.
+
+### ContextualizedWorker
+
+```
+class Worker
+  include ContextualizedLogs::ContextualizedWorker
+  contextualized_worker true # enable logging of job enqueuing, performing, completing and failure
+  contextualized_model true # enable logging of any (contextualized) model found or created while performing job
+
+  # enable adding jobs args (cherry picked) to log metadata (CurrentContext) to be logged alongs any job logs
+  def self.contextualize_args(args)
+    { first: args.first }
+  end
+end
+```
+
+If `ContextualizedLogs::CurrentContext.contextualized_model_enabled` is enable on the current tread, any Model which is created or find will add `{ context_values: { model_ids: ids } }`.
+So if you fetch model (`id == 1`), and create model (`id == 2`), your logs will now contain `{ context_values: { model_ids: [1, 2] } }`.
+
+#### Metadata Customization
+
+If you wish to logs different predefined metadata (`request.uuid`, `request.ip`, ...)
 
 ## Installation
 
@@ -85,7 +109,7 @@ $ bundle install
 - [x] contextualized logger
 - [x] contextualized controller
 - [x] contextualized model
-- [ ] contextualized worker
+- [x] contextualized worker
 
 ## Specs
 

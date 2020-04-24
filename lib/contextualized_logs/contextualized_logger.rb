@@ -20,6 +20,10 @@ module ContextualizedLogs
       dump(msg, attributes, :error)
     end
 
+    def current_context
+      CurrentContext.context
+    end
+
     def formatter
       Proc.new{|severity, timestamp, progname, msg|
         # format (and enrich) log in JSON format (-> )
@@ -41,7 +45,7 @@ module ContextualizedLogs
           first(15)
         data[:log_type] = 'log'
         data.merge!(parse_msg(msg)) # parse message (string, hash, error, ...)
-        data.merge!(CurrentContext.context) # merge current request context
+        data.merge!(current_context) # merge current request context
         data.to_json + "\n"
       }
     end

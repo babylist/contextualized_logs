@@ -41,6 +41,7 @@ module ContextualizedLogs
       data.delete(:network) if data[:network][:client].empty?
 
       # eventual error response
+      #  normalized
       data[:errors] = errors unless errors.nil?
 
       # context_values

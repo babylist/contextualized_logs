@@ -1,11 +1,13 @@
 # https://github.com/rails/rails/pull/29180
 require 'active_support'
+require_relative 'current_context'
 
 module ContextualizedLogs
   module ContextualizedController
     extend ActiveSupport::Concern
 
     DEFAULT_CONTEXTUALIZED_MODEL_ENABLED = false
+    DEFAULT_CURRENT_CONTEXT = ContextualizedLogs::CurrentContext
 
     included do
       before_action :contextualize_requests, unless: -> { Rails.env.development? }
@@ -14,20 +16,20 @@ module ContextualizedLogs
     def contextualize_requests
      # store request && user info in CurrentContext ActiveSupport attribute
      # which can then be read from anywhere
-     CurrentContext.contextualized_model_enabled = self.class.contextualized_models_enabled?
+     self.class.current_context.contextualized_model_enabled = self.class.contextualized_model_enabled?
      begin
-       CurrentContext.resource_name = "#{self.class.name.downcase}_#{action_name.downcase}" rescue nil
-       CurrentContext.request_uuid = request.uuid
-       CurrentContext.request_origin = request.origin
-       CurrentContext.request_user_agent = request.user_agent
-       CurrentContext.request_referer = request.referer&.to_s
-       CurrentContext.request_ip = request.ip
-       CurrentContext.request_remote_ip = request.remote_ip
-       CurrentContext.request_remote_addr = request.remote_addr
-       CurrentContext.request_x_forwarded_for = request.x_forwarded_for
-       CurrentContext.request_xhr = request.xhr? ? 'true' : 'false'
+       self.class.current_context.resource_name = "#{self.class.name.downcase}_#{action_name.downcase}" rescue nil
+       self.class.current_context.request_uuid = request.uuid
+       self.class.current_context.request_origin = request.origin
+       self.class.current_context.request_user_agent = request.user_agent
+       self.class.current_context.request_referer = request.referer&.to_s
+       self.class.current_context.request_ip = request.ip
+       self.class.current_context.request_remote_ip = request.remote_ip
+       self.class.current_context.request_remote_addr = request.remote_addr
+       self.class.current_context.request_x_forwarded_for = request.x_forwarded_for
+       self.class.current_context.request_xhr = request.xhr? ? 'true' : 'false'
      rescue StandardError => e
-       logger.dump_error('error setting context', e)
+       Rails.logger.dump_error('error setting context', e)
      end
     end
 
@@ -40,19 +42,21 @@ module ContextualizedLogs
     end
 
     module ClassMethods
-      def contextualized_models_enabled?
-        @contextualized_models_enabled || DEFAULT_CONTEXTUALIZED_MODEL_ENABLED
+      def contextualized_model_enabled?
+        @contextualized_model_enabled || DEFAULT_CONTEXTUALIZED_MODEL_ENABLED
       end
 
-      def contextualized_models(enable)
-        @contextualized_models_enabled = enable
+      def contextualized_model(enable)
+        @contextualized_model_enabled = enable
       end
-    end
 
-    private
+      def current_context
+        @current_context || DEFAULT_CURRENT_CONTEXT
+      end
 
-    def logger
-      Rails.logger
+      def set_current_context(current_context)
+        @current_context = current_context
+      end
     end
   end
 end

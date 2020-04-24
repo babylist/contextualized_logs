@@ -23,9 +23,9 @@ module ContextualizedLogs
     describe '.contextualize' do
       subject do
         model = FakeModel.new
-        described_class.send(:contextualize, model, Model.contextualizable_keys)
+        described_class.send(:contextualize, model, Model.contextualizable_keys, CurrentContext)
       end
-      
+
       before do
         CurrentContext.contextualized_model_enabled = contextualized_model_enabled
       end
