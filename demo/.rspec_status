@@ -1,0 +1,12 @@
+example_id                                                                 | status | run_time        |
+-------------------------------------------------------------------------- | ------ | --------------- |
+./spec/datadog_contextualized_logs/contextualized_controller_spec.rb[1:1]  | passed | 0.01893 seconds |
+./spec/datadog_contextualized_logs/contextualized_controller_spec.rb[1:2]  | passed | 0.01225 seconds |
+./spec/datadog_contextualized_logs/contextualized_controller_spec.rb[1:3]  | passed | 0.00726 seconds |
+./spec/datadog_contextualized_logs/contextualized_controller_spec.rb[1:4]  | passed | 0.01538 seconds |
+./spec/datadog_contextualized_logs/contextualized_controller_spec.rb[2:1]  | passed | 0.0118 seconds  |
+./spec/datadog_contextualized_logs/contextualized_controller_spec.rb[2:2]  | passed | 0.00977 seconds |
+./spec/datadog_contextualized_logs/contextualized_model_spec.rb[1:1:1:1:1] | passed | 0.01328 seconds |
+./spec/datadog_contextualized_logs/contextualized_model_spec.rb[1:1:2:1:1] | passed | 0.00681 seconds |
+./spec/datadog_contextualized_logs/contextualized_model_spec.rb[1:2:1:1:1] | passed | 0.00311 seconds |
+./spec/datadog_contextualized_logs/contextualized_model_spec.rb[1:2:2:1:1] | passed | 0.00291 seconds |
