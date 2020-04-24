@@ -10,8 +10,26 @@ Gem::Specification.new do |spec|
   spec.authors     = ["Hugues Bernet-Rollande"]
   spec.email       = ["hugues@xdev.fr"]
   spec.homepage    = "https://github.com/hugues/contextualized_logs"
-  spec.summary     = "Summary of ContextualizedLogs."
-  spec.description = "Description of ContextualizedLogs."
+  spec.summary     = "Contextualize your logs (requests params, found/created model metadata, workers, ...)"
+  spec.description = <<~EOF
+  Online logging solution (like [Datadog](https://www.datadoghq.com)) have drastically transform the way we log.
+
+  An app will nowdays logs dozen (hundred) of logs per requests.
+
+  The issue is often to correlate this logs, with the initiating request (or job) and add shared metadata on this logs.
+
+  Here come `ContextualizedLogs`.
+
+  The main idea is to enhance your logs from your controller (including `ContextualizedController`, which use a before action), which will add the params to your logs (and some metadata about the request itself, like `request.uuid`).
+
+  This metadata are stored in a `ActiveSupport::CurrentAttributes` which is a singleton (reset per request).
+
+  Each subsequent logs in this thread (request) will also be enriched with this metadata, making it easier to find all the logs associated with a request (`uuid`, `ip`, `params.xxx`).
+
+  On top of this, logs can also be enriched by the ActiveRecord model they use (`create` or `find`) (models including `ContextualizedModel`). So any time a contextualized model is created or find, some metadata related to the model (`id`, ...) will also be added to the logs.
+
+  Allowing you to find all logs which "touched" this models.
+  EOF
   spec.license     = "MIT"
 
   spec.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
