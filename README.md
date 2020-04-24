@@ -18,17 +18,195 @@ On top of this, logs can also be enriched by the ActiveRecord model they use (`c
 
 Allowing you to find all logs which "touched" this models.
 
+All logs are (by default in json format)
 
-So you now have:
+```ruby
+class MyController < ApplicationController
+  include ContextualizedLogs::ContextualizedController
+end
+```
 
 ```
-get :show, { user_id: 123 }
-which will log
+curl --referer 'referer' --user-agent 'user_agent' -H "Origin: http://localhost" http://localhost/my_controller?param=a
+
+# development.log
 {
-  resource_name: ''
+  resource_name: 'mycontroller_show',
+  http: {
+    referer: 'referer',
+    request_id: 'xxxx-xxxx-xxxx-xxxx'
+    useragent: 'user_agent',
+    origin: 'http://localhost'
+  },
+  network: {
+    client: {
+      ip: '127.0.0.1',
+      remote_addr: '127.0.0.1',
+      remote_ip: '127.0.0.1',
+      x_forwarded_for: '127.0.0.1'
+    }
+  }
 }
 ```
 
+```ruby
+class User < ActiveRecord::Base
+  include ContextualizedLogs::ContextualizedModel
+  contextualizable { user_ids: :id }
+end
+
+class UserController < ApplicationController
+  include ContextualizedLogs::ContextualizedController
+  contextualized_model true
+
+  def show
+    User.find(params[:id])
+  end
+end
+```
+
+```
+curl http://localhost/users/1
+
+# development.log
+{
+  context_values: {
+    user_ids: [1]
+  },
+  resource_name: 'mycontroller_show',
+  http: {
+    request_id: 'xxxx-xxxx-xxxx-xxxx'
+  },
+  network: {
+    client: {
+      ip: '127.0.0.1',
+      remote_addr: '127.0.0.1',
+      remote_ip: '127.0.0.1',
+      x_forwarded_for: '127.0.0.1'
+    }
+  }
+}
+```
+
+```ruby
+class User < ActiveRecord::Base
+  include ContextualizedLogs::ContextualizedModel
+  contextualizable { user_ids: :id }
+end
+
+class UserTracker < ActiveRecord::Base
+  include ContextualizedLogs::ContextualizedModel
+
+  belongs_to :user
+
+  contextualizable { user_tracker_ids: :id }
+end
+
+class UserController < ApplicationController
+  include ContextualizedLogs::ContextualizedController
+  contextualized_model true
+
+  def show
+    user_id = params[:id]
+    User.find(user_id)
+    UserTrackerWorker.perform_async(user_id, 'show')
+  end
+end
+
+class UserTrackerWorker
+  include Sidekiq::Worker
+  include ContextualizedLogs::ContextualizedWorker
+  contextualized_worker true
+  contextualized_model true
+  def self.contextualize_args(args)
+    { user_id: args.first, action: args.last }
+  end
+
+  def perform(user_id, action)
+    UserTracker.create(user_id: user_id, action: action)
+  end
+end
+```
+
+```
+curl http://localhost/users/1
+
+# development.log
+{
+  context_values: {
+    user_ids: [1]
+  },
+  enqueued_jobs_ids: ['1234-xxxx-xxxx-xxxx']
+  resource_name: 'mycontroller_show',
+  http: {
+    request_id: 'xxxx-xxxx-xxxx-xxxx'
+  },
+  network: {
+    client: {
+      ip: '127.0.0.1',
+      remote_addr: '127.0.0.1',
+      remote_ip: '127.0.0.1',
+      x_forwarded_for: '127.0.0.1'
+    }
+  }
+}
+{
+  message: 'sidekiq: completing job UserWorker: 1234-xxxx-xxxx-xxxx, on queue default',
+  job: {
+    worker: 'UserWorker',
+    id: '1234-xxxx-xxxx-xxxx',
+    args: {
+      user_id: 1,
+      action: 'show'
+    }
+  }
+  context_values: {
+    user_ids: [1],
+    user_tracker_ids: [1]
+  },
+  enqueued_jobs_ids: ['xxxx-xxxx-xxxx-xxxx']
+  resource_name: 'mycontroller_show',
+  http: {
+    request_id: 'xxxx-xxxx-xxxx-xxxx'
+  },
+  network: {
+    client: {
+      ip: '127.0.0.1',
+      remote_addr: '127.0.0.1',
+      remote_ip: '127.0.0.1',
+      x_forwarded_for: '127.0.0.1'
+    }
+  }
+}
+{
+  message: 'sidekiq: completing job UserWorker: 1234-xxxx-xxxx-xxxx, on queue default',
+  job: {
+    worker: 'UserWorker',
+    id: '1234-xxxx-xxxx-xxxx',
+    args: {
+      user_id: 1,
+      action: 'show'
+    }
+  }
+  context_values: {
+    user_ids: [1],
+    user_tracker_ids: [1]
+  },
+  enqueued_jobs_ids: ['xxxx-xxxx-xxxx-xxxx']
+  resource_name: 'mycontroller_show',
+  http: {
+    request_id: 'xxxx-xxxx-xxxx-xxxx'
+  },
+  network: {
+    client: {
+      ip: '127.0.0.1',
+      remote_addr: '127.0.0.1',
+      remote_ip: '127.0.0.1',
+      x_forwarded_for: '127.0.0.1'
+    }
+  }
+}
+```
 
 ## Usage
 
@@ -110,10 +288,128 @@ $ bundle install
 - [x] contextualized controller
 - [x] contextualized model
 - [x] contextualized worker
+- [ ] lograge
 
 ## Specs
 
 ```
+ContextualizedLogs::ContextualizedController
+  .contextualize_requests
+    should set request details
+
+ContextualizedLogs::ContextualizedLogger
+  format log
+  includes stack (PENDING: Temporarily skipped with xit)
+  format exception
+  inject context
+  dump
+    respect severity debug (default)
+    dump message
+    dump exception
+
+ContextualizedLogs::ContextualizedModel
+  .contextualizable
+    set contextualizable keys
+  .contextualize
+    with contextualized_model_enabled == true
+      set contextualizable values
+    with contextualized_model_enabled == false
+      set contextualizable values
+
+ContextualizedLogs
+  has a version number
+
+Pending: (Failures listed here are expected and do not affect your suite's status)
+
+  1) ContextualizedLogs::ContextualizedLogger includes stack
+     # Temporarily skipped with xit
+     # ./spec/contextualized_logs/contextualized_logger_spec.rb:61
+
+
+Finished in 0.01959 seconds (files took 0.89851 seconds to load)
+12 examples, 0 failures, 1 pending
+
+DummyController
+  should set request details
+  should NOT set enable model context values
+  should set resource_name
+  should set request details
+
+ContextualizedModelDummyController
+  should set request details
+  should set enable model context values
+
+ContextualizedLogs::ContextualizedModel
+  with CurrentContext.contextualized_model_enabled == true
+    behaves like after_create context
+      .after_create
+        set context
+    behaves like after_find context
+      .after_find
+        does
+  with CurrentContext.contextualized_model_enabled == false
+    behaves like after_create context
+      .after_create
+        set context
+    behaves like after_find context
+      .after_find
+        does
+
+ContextualizedLogs::Sidekiq::Middleware::Client::InjectCurrentContext
+  ContextualizedWorker
+    with uncontextualized worker
+      DOES NOT change job context
+      DOES NOT log job enqueued
+      DOES NOT enable model context values
+      behaves like it yield
+        should eq true
+    with contextualized worker
+      DOES change job context
+      DOES log job enqueued
+      behaves like it yield
+        should eq true
+      with contextualized model
+        DOES enable model context values
+
+ContextualizedLogs::Sidekiq::Middleware::Server::RestoreCurrentContext
+  with uncontextualized worker
+    DOES NOT log job
+    DOES NOT log job failure
+    behaves like it yield
+      should eq true
+    behaves like enable model context values
+      enable model context values
+  with contextualized worker
+    behaves like it yield
+      should eq true
+    behaves like log job failure
+      log job failure
+    behaves like log with context
+      log with context
+    behaves like enable model context values
+      enable model context values
+  with contextualized model worker
+    behaves like it yield
+      should eq true
+    behaves like log job failure
+      log job failure
+    behaves like log with context
+      log with context
+    behaves like enable model context values
+      enable model context values
+  with contextualized model worker
+    log with args
+    behaves like it yield
+      should eq true
+    behaves like log job failure
+      log job failure
+    behaves like log with context
+      log with context
+    behaves like enable model context values
+      enable model context values
+
+Finished in 0.29379 seconds (files took 1.35 seconds to load)
+35 examples, 0 failures
 ```
 
 ## Development
