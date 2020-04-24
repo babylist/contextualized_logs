@@ -15,7 +15,6 @@ class ModelController < ApplicationController
 
   def destroy
     Model.find(params[:id]).destroy!
-    ModelWorker.perform_async(model.id, 'destroy')
     render json: { success: 'true' }, status: 200
   end
 
