@@ -10,10 +10,11 @@ module ContextualizedLogs
     DEFAULT_CURRENT_CONTEXT = ContextualizedLogs::CurrentContext
 
     included do
-      before_action :contextualize_requests, unless: -> { Rails.env.development? }
+      before_action :contextualize_requests
     end
 
     def contextualize_requests
+    # Rails.logger.debug "contextualize_requests"
      # store request && user info in CurrentContext ActiveSupport attribute
      # which can then be read from anywhere
      self.class.current_context.contextualized_model_enabled = self.class.contextualized_model_enabled?
@@ -34,8 +35,8 @@ module ContextualizedLogs
     end
 
     def self.included(base)
-      unless base.ancestors.include? ActionController::Base
-        raise ArgumentError, "ContextualizedLogs::ContextualizedController can only be included in a ActionController::Base"
+      if !base.ancestors.include?(ActionController::Base) && !base.ancestors.include?(ActionController::API)
+        raise ArgumentError, "ContextualizedLogs::ContextualizedController can only be included in a ActionController::Base or ActionController::API"
       end
 
       base.extend(ClassMethods)

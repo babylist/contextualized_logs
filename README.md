@@ -31,6 +31,13 @@ curl --referer 'referer' --user-agent 'user_agent' -H "Origin: http://localhost"
 
 # development.log
 {
+  syslog: {
+    env: 'development',
+    host: 'localhost'
+  },
+  type: 'INFO',
+  time: '2020-04-24T19:52:51.452+02:00',
+  log_type: 'log',
   resource_name: 'mycontroller_show',
   http: {
     referer: 'referer',
@@ -70,6 +77,13 @@ curl http://localhost/users/1
 
 # development.log
 {
+  syslog: {
+    env: 'development',
+    host: 'localhost'
+  },
+  type: 'INFO',
+  time: '2020-04-24T19:52:51.452+02:00',
+  log_type: 'log',
   context_values: {
     user_ids: [1]
   },
@@ -133,6 +147,13 @@ curl http://localhost/users/1
 
 # development.log
 {
+  syslog: {
+    env: 'development',
+    host: 'localhost'
+  },
+  type: 'INFO',
+  time: '2020-04-24T19:52:51.452+02:00',
+  log_type: 'log',
   context_values: {
     user_ids: [1]
   },
@@ -151,6 +172,13 @@ curl http://localhost/users/1
   }
 }
 {
+  syslog: {
+    env: 'development',
+    host: 'localhost'
+  },
+  type: 'INFO',
+  time: '2020-04-24T19:52:51.452+02:00',
+  log_type: 'log',
   message: 'sidekiq: completing job UserWorker: 1234-xxxx-xxxx-xxxx, on queue default',
   job: {
     worker: 'UserWorker',
@@ -179,6 +207,13 @@ curl http://localhost/users/1
   }
 }
 {
+  syslog: {
+    env: 'development',
+    host: 'localhost'
+  },
+  type: 'INFO',
+  time: '2020-04-24T19:52:51.452+02:00',
+  log_type: 'log',
   message: 'sidekiq: completing job UserWorker: 1234-xxxx-xxxx-xxxx, on queue default',
   job: {
     worker: 'UserWorker',

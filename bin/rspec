@@ -1,2 +1,5 @@
 #!/usr/bin/env ruby
+
+require 'bundler/setup'
+ENV['RAILS_ENV'] ||= 'test'
 load Gem.bin_path('rspec-core', 'rspec')
