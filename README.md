@@ -243,6 +243,29 @@ curl http://localhost/users/1
 }
 ```
 
+## Demo
+
+ $ bundle install
+ $ bin/rails server
+ $ tail -f log/development
+ $ curl
+ ```
+ bundle install
+ bin/rails server
+ ```
+
+ ```
+ tail -f log/development
+ ```
+
+ ```
+curl -X POST -d '{"value": "value"}' -H 'Content-Type: application/json' "http://localhost:3000/model"
+curl "http://localhost:3000/model/1"
+curl "http://localhost:3000/model"
+curl -X DELETE "http://localhost:3000/model/1"
+```
+
+
 ## Usage
 
 ### ContextualizedLogger
