@@ -340,7 +340,7 @@ gem 'contextualized_logs'
 
 And then execute:
 
-$ bundle install
+  $ bundle install
 
 
 ## Roadmap
