@@ -27,7 +27,7 @@ RSpec.describe DummyController, type: :controller do
 
   it 'should NOT set enable model context values' do
     get :show, params: params
-    expect(ContextualizedLogs::CurrentContext.model_context_values_enabled).to eq(false)
+    expect(ContextualizedLogs::CurrentContext.contextualized_model_enabled).to eq(false)
     expect(ContextualizedLogs::CurrentContext.context_values).to eq(nil)
   end
 
@@ -60,9 +60,9 @@ RSpec.describe DummyController, type: :controller do
   end
 end
 
-class ModelContextValuesEnabledDummyController < ActionController::Base
+class ContextualizedModelsDummyController < ActionController::Base
    include ContextualizedLogs::ContextualizedController
-   enable_contextualized_models true
+   contextualized_models true
 
    def show
      Model.last
@@ -70,23 +70,23 @@ class ModelContextValuesEnabledDummyController < ActionController::Base
    end
 end
 
-RSpec.describe ModelContextValuesEnabledDummyController, type: :controller do
+RSpec.describe ContextualizedModelsDummyController, type: :controller do
   let(:params) { { a: 'a' } }
   let!(:model) { FactoryBot.create(:model, value: 'value') }
   before do
     routes.draw {
-      get 'dummy' => 'model_context_values_enabled_dummy#show'
+      get 'dummy' => 'contextualized_models_dummy#show'
     }
   end
 
   it 'should set request details' do
-    expect_any_instance_of(ModelContextValuesEnabledDummyController).to receive(:contextualize_requests)
+    expect_any_instance_of(ContextualizedModelsDummyController).to receive(:contextualize_requests)
     get :show, params: params
   end
 
   it 'should set enable model context values' do
     get :show, params: params
-    expect(ContextualizedLogs::CurrentContext.model_context_values_enabled).to eq(true)
+    expect(ContextualizedLogs::CurrentContext.contextualized_model_enabled).to eq(true)
     expect(ContextualizedLogs::CurrentContext.context_values).to eq(values: ['value'])
   end
 end

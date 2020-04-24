@@ -36,6 +36,9 @@ which will log
 
 In order to enrich your logs, you needs to use (subclass of `ActiveSupport::Logger`) `ContextualizedLogger`
 
+> ContextualizedLogger logs by default some request metadata following Datadog naming convention
+> https://docs.hq.com/logs/processing/attributes_naming_convention/#source-code
+
 ```
 Rails.application.configure do
   config.logger = ContextualizedLogs::ContextualizedLogger.new("log/#{Rails.env}.log")
@@ -61,7 +64,7 @@ class Model < ActiveRecord::Base
 end
 ```
 
-If `ContextualizedLogs::CurrentContext.model_context_values_enabled` is enable on the current tread, any Model which is created or find will add `{ context_values: { model_ids: ids } }`.
+If `ContextualizedLogs::CurrentContext.contextualized_model_enabled` is enable on the current tread, any Model which is created or find will add `{ context_values: { model_ids: ids } }`.
 So if you fetch model (`id == 1`), and create model (`id == 2`), your logs will now contain `{ context_values: { model_ids: [1, 2] } }`.
 
 ## Installation

@@ -27,11 +27,11 @@ module ContextualizedLogs
       end
       
       before do
-        CurrentContext.model_context_values_enabled = model_context_values_enabled
+        CurrentContext.contextualized_model_enabled = contextualized_model_enabled
       end
 
-      context 'with model_context_values_enabled == true' do
-        let(:model_context_values_enabled) { true }
+      context 'with contextualized_model_enabled == true' do
+        let(:contextualized_model_enabled) { true }
 
         it 'set contextualizable values' do
           subject
@@ -39,8 +39,8 @@ module ContextualizedLogs
         end
       end
 
-      context 'with model_context_values_enabled == false' do
-        let(:model_context_values_enabled) { false }
+      context 'with contextualized_model_enabled == false' do
+        let(:contextualized_model_enabled) { false }
 
         it 'set contextualizable values' do
           subject
@@ -50,9 +50,9 @@ module ContextualizedLogs
 
     end
 
-    # context 'with model_context_values_enabled' do
+    # context 'with contextualized_model_enabled' do
     #   before do
-    #     CurrentContext.model_context_values_enabled = true
+    #     CurrentContext.contextualized_model_enabled = true
     #   end
     #
     #   describe '.after_find' do
@@ -67,7 +67,7 @@ module ContextualizedLogs
     #
     # context 'when context enabled' do
     #   before do
-    #     CurrentContext.model_context_values_enabled = true
+    #     CurrentContext.contextualized_model_enabled = true
     #   end
     #
     #   describe 'find' do

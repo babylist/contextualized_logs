@@ -2,7 +2,6 @@
 # storing global request info
 require 'active_support'
 
-
 module ContextualizedLogs
   class CurrentContext < ActiveSupport::CurrentAttributes
     # ⚠️ do not use this class to store any controller specific info..
@@ -12,27 +11,18 @@ module ContextualizedLogs
       :current_job_id, :enqueued_jobs_ids, :worker, :worker_args, # sidekiq
       :request_remote_ip, :request_ip, :request_remote_addr, :request_x_forwarded_for, # ips
       :errors,
-      :model_context_values_enabled, # enable model context values
+      :contextualized_model_enabled, # enable model context values
       :context_values, :context_values_count, # context values
       :resource_name # controller_action to correlate APM metrics
 
     MAX_CONTEXT_VALUES = 100
 
     def self.context
-      puts "model_context_values_enabled: #{model_context_values_enabled}"
       # https://docs.hq.com/logs/processing/attributes_naming_convention/#source-code
 
       data = {}
 
       data[:resource_name] = resource_name unless resource_name.nil?
-
-      # data[:device] = {}
-      # data[:device][:id] = device_id unless device_id.nil?
-      # data[:device][:os] = { type: device_os, version: device_os_version } unless device_os.nil?
-      # data[:device][:model] = device_model unless device_model.nil?
-      # data.delete(:device) if data[:device].empty?
-      #
-      # data[:app] = { version: app_version } unless app_version.nil?
 
       #  normalized
       data[:http] = {}
@@ -40,20 +30,15 @@ module ContextualizedLogs
       data[:http][:request_id] = request_uuid unless request_uuid.nil?
       data[:http][:useragent] = request_user_agent unless request_user_agent.nil?
       data[:http][:origin] = request_origin unless request_origin.nil?
-      # data[:http][:sec_fetch_site] = request_sec_fetch_site unless request_sec_fetch_site.nil?
-      # data[:http][:sec_fetch_mode] = request_sec_fetch_mode unless request_sec_fetch_mode.nil?
       data.delete(:http) if data[:http].empty?
 
       #  normalized
       data[:network] = { client: {} }
-      data[:network][:client][:ip] = request_ip unless request_ip.nil? # using remote ip (we're behind proxy)
+      data[:network][:client][:ip] = request_ip unless request_ip.nil?
       data[:network][:client][:remote_addr] = request_remote_addr unless request_remote_addr.nil?
       data[:network][:client][:remote_ip] = request_remote_ip unless request_remote_ip.nil?
       data[:network][:client][:x_forwarded_for] = request_x_forwarded_for unless request_x_forwarded_for.nil?
       data.delete(:network) if data[:network][:client].empty?
-
-      #  normalized
-      # data[:usr] = { id: user_id } unless user_id.nil?
 
       # eventual error response
       data[:errors] = errors unless errors.nil?
@@ -65,8 +50,6 @@ module ContextualizedLogs
           context_values.each { |k, v| data[:context_values][k.to_sym] = v }
         end
       end
-
-      # data[:session] = { token: session_token } unless session_token.nil?
 
       unless current_job_id.nil? && worker.nil?
         data[:job] = { id: current_job_id, worker: worker }

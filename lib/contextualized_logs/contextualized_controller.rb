@@ -14,7 +14,7 @@ module ContextualizedLogs
     def contextualize_requests
      # store request && user info in CurrentContext ActiveSupport attribute
      # which can then be read from anywhere
-     CurrentContext.model_context_values_enabled = self.class.contextualized_models_enabled?
+     CurrentContext.contextualized_model_enabled = self.class.contextualized_models_enabled?
      begin
        CurrentContext.resource_name = "#{self.class.name.downcase}_#{action_name.downcase}" rescue nil
        CurrentContext.request_uuid = request.uuid
@@ -41,11 +41,11 @@ module ContextualizedLogs
 
     module ClassMethods
       def contextualized_models_enabled?
-        @enable_contextualized_models || DEFAULT_CONTEXTUALIZED_MODEL_ENABLED
+        @contextualized_models_enabled || DEFAULT_CONTEXTUALIZED_MODEL_ENABLED
       end
 
-      def enable_contextualized_models(enable)
-        @enable_contextualized_models = enable
+      def contextualized_models(enable)
+        @contextualized_models_enabled = enable
       end
     end
 

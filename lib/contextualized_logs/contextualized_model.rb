@@ -16,7 +16,7 @@ module ContextualizedLogs
 
     class << self
       def contextualize(model, keys)
-        return unless CurrentContext.model_context_values_enabled
+        return unless CurrentContext.contextualized_model_enabled
         keys&.each do |k, v|
           v = model.try(v.to_sym)
           CurrentContext.add_context(k, v) if v
