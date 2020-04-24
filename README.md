@@ -251,6 +251,11 @@ curl http://localhost/users/1
  bin/rails server
  ```
 
+### start sidekiq
+ ```
+ bundle exec sidekiq
+ ```
+
 ### tail logs
  ```
  tail -f log/development
