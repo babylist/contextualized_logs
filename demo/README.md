@@ -1,3 +1,3 @@
-# DatadogContextualizedLogs
+# ContextualizedLogs
 
-Sample demo App to test DatadogContextualizedLogs integration in Rails
+Sample demo App to test ContextualizedLogs integration in Rails

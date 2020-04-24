@@ -1,6 +1,6 @@
 require 'active_support'
 
-module DatadogContextualizedLogs
+module ContextualizedLogs
   module ContextualizedModel
     extend ActiveSupport::Concern
 

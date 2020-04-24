@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    datadog_contextualized_logs (0.1.0)
+    contextualized_logs (0.1.0)
       rails (~> 5.2.3)
 
 GEM
@@ -146,7 +146,7 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 2.0)
-  datadog_contextualized_logs!
+  contextualized_logs!
   faker (~> 1.8)
   rails (~> 5.2.3)
   rake (~> 13.0)

@@ -2,8 +2,8 @@
 require "rails/railtie"
 require 'rails'
 
-module DatadogContextualizedLogs
+module ContextualizedLogs
   class Railtie < ::Rails::Railtie
-    railtie_name :datadog_contextualized_logs
+    railtie_name :contextualized_logs
   end
 end

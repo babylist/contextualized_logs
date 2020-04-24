@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-module DatadogContextualizedLogs
+module ContextualizedLogs
   RSpec.describe ContextualizedModel do
     before do
       CurrentContext.model_context_values_enabled = model_context_values_enabled

@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'active_record'
 
-module DatadogContextualizedLogs
+module ContextualizedLogs
   RSpec.describe ContextualizedModel do
     class Model < ActiveRecord::Base
       include ContextualizedModel

@@ -1,7 +1,7 @@
 # coding: utf-8
 require "rails_helper"
 
-module DatadogContextualizedLogs
+module ContextualizedLogs
 
   class Controller < ActionController::Base
      include ContextualizedController
@@ -36,7 +36,7 @@ module DatadogContextualizedLogs
         allow(fake_logger).to receive(:dump_error)
         fake_controller.contextualize_requests
         expect(CurrentContext.context).to eq(
-          resource_name: 'datadogcontextualizedlogs::controller_action',
+          resource_name: 'contextualizedlogs::controller_action',
             http: {
               origin: 'origin',
               referer: 'referer',

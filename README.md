@@ -1,4 +1,4 @@
-# DatadogContextualizedLogs
+# ContextualizedLogs
 
 Online logging solution (like [Datadog](https://www.datadoghq.com)) have drastically transform the way we log.
 
@@ -38,7 +38,7 @@ In order to enrich your logs, you needs to use (subclass of `ActiveSupport::Logg
 
 ```
 Rails.application.configure do
-  config.logger = DatadogContextualizedLogs::ContextualizedLogger.new("log/#{Rails.env}.log")
+  config.logger = ContextualizedLogs::ContextualizedLogger.new("log/#{Rails.env}.log")
 end
 ```
 
@@ -46,7 +46,7 @@ end
 
 ```
 class Controller < ApplicationController
-  include DatadogContextualizedLogs::ContextualizedController
+  include ContextualizedLogs::ContextualizedController
 end
 ```
 
@@ -56,12 +56,12 @@ end
 
 ```
 class Model < ActiveRecord::Base
-  include DatadogContextualizedLogs::ContextualizedModel
+  include ContextualizedLogs::ContextualizedModel
   contextualizable keys: {model_ids: :id}
 end
 ```
 
-If `DatadogContextualizedLogs::CurrentContext.model_context_values_enabled` is enable on the current tread, any Model which is created or find will add `{ context_values: { model_ids: ids } }`.
+If `ContextualizedLogs::CurrentContext.model_context_values_enabled` is enable on the current tread, any Model which is created or find will add `{ context_values: { model_ids: ids } }`.
 So if you fetch model (`id == 1`), and create model (`id == 2`), your logs will now contain `{ context_values: { model_ids: [1, 2] } }`.
 
 ## Installation
@@ -69,7 +69,7 @@ So if you fetch model (`id == 1`), and create model (`id == 2`), your logs will 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'datadog_contextualized_logs'
+gem 'contextualized_logs'
 ```
 
 And then execute:
@@ -97,7 +97,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/huguesbr/datadog_contextualized_logs. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/huguesbr/contextualized_logs. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 

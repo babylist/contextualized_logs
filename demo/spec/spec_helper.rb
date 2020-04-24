@@ -1,5 +1,5 @@
 require "bundler/setup"
-require "datadog_contextualized_logs"
+require "contextualized_logs"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

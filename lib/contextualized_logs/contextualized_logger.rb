@@ -1,7 +1,7 @@
 require 'active_support'
 
-module DatadogContextualizedLogs
-  # custom logger for datadog
+module ContextualizedLogs
+  # custom logger for
   # logging in json format with log enrichment
   # support Rails.logger.dump('msg', hash)
 
@@ -22,15 +22,15 @@ module DatadogContextualizedLogs
 
     def formatter
       Proc.new{|severity, timestamp, progname, msg|
-        # format (and enrich) log in JSON format (-> Datadog)
-        # https://docs.datadoghq.com/logs/processing/attributes_naming_convention/#source-code
-        correlation = Datadog.tracer.active_correlation
+        # format (and enrich) log in JSON format (-> )
+        # https://docs.hq.com/logs/processing/attributes_naming_convention/#source-code
+        # correlation = Datadog.tracer.active_correlation
         data = {
-          dd: {
-            trace_id: correlation.trace_id,
-            span_id: correlation.span_id
-          },
-          ddsource: ['ruby'],
+          # dd: {
+          #   trace_id: correlation.trace_id,
+          #   span_id: correlation.span_id
+          # },
+          # ddsource: ['ruby'],
           syslog: { env: Rails.env, host: 'a' },
           type: severity.to_s,
           time: timestamp
@@ -70,7 +70,7 @@ module DatadogContextualizedLogs
       data = {}
       case msg
       when ::Exception
-        # format data to be interpreted as an error logs by datadog
+        # format data to be interpreted as an error logs by
         data[:error] = {
           kind: msg.class.to_s,
           message: msg.message,

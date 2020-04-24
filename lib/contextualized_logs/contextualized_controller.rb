@@ -1,7 +1,7 @@
 # https://github.com/rails/rails/pull/29180
 require 'active_support'
 
-module DatadogContextualizedLogs
+module ContextualizedLogs
   module ContextualizedController
     extend ActiveSupport::Concern
 
@@ -33,7 +33,7 @@ module DatadogContextualizedLogs
 
     def self.included(base)
       unless base.ancestors.include? ActionController::Base
-        raise ArgumentError, "DatadogContextualizedLogs::ContextualizedController can only be included in a ActionController::Base"
+        raise ArgumentError, "ContextualizedLogs::ContextualizedController can only be included in a ActionController::Base"
       end
 
       base.extend(ClassMethods)

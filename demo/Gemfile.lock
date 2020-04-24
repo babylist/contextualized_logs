@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    datadog_contextualized_logs (0.1.0)
+    contextualized_logs (0.1.0)
       rails (~> 5.2.3)
 
 GEM
@@ -181,7 +181,7 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
-  datadog_contextualized_logs!
+  contextualized_logs!
   factory_bot_rails (= 4.8.2)
   faker (= 1.8.7)
   jbuilder (~> 2.5)

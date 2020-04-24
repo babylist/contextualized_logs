@@ -2,7 +2,7 @@
 require "rails_helper"
 
 class DummyController < ActionController::Base
-   include DatadogContextualizedLogs::ContextualizedController
+   include ContextualizedLogs::ContextualizedController
 
    def show
      Model.last
@@ -27,13 +27,13 @@ RSpec.describe DummyController, type: :controller do
 
   it 'should NOT set enable model context values' do
     get :show, params: params
-    expect(DatadogContextualizedLogs::CurrentContext.model_context_values_enabled).to eq(false)
-    expect(DatadogContextualizedLogs::CurrentContext.context_values).to eq(nil)
+    expect(ContextualizedLogs::CurrentContext.model_context_values_enabled).to eq(false)
+    expect(ContextualizedLogs::CurrentContext.context_values).to eq(nil)
   end
 
   it 'should set resource_name' do
     get :show, params: params
-    expect(DatadogContextualizedLogs::CurrentContext.resource_name).to eq('dummycontroller_show')
+    expect(ContextualizedLogs::CurrentContext.resource_name).to eq('dummycontroller_show')
   end
 
   it 'should set request details' do
@@ -49,19 +49,19 @@ RSpec.describe DummyController, type: :controller do
 
     get :show, params: params
 
-    expect(DatadogContextualizedLogs::CurrentContext.request_uuid).to eq('request_uuid')
-    expect(DatadogContextualizedLogs::CurrentContext.request_origin).to eq('origin')
-    expect(DatadogContextualizedLogs::CurrentContext.request_referer).to eq('referer')
-    expect(DatadogContextualizedLogs::CurrentContext.request_remote_addr).to eq('192.168.0.0')
-    expect(DatadogContextualizedLogs::CurrentContext.request_remote_ip).to eq('192.168.0.1')
-    expect(DatadogContextualizedLogs::CurrentContext.request_ip).to eq('192.168.0.2')
-    expect(DatadogContextualizedLogs::CurrentContext.request_x_forwarded_for).to eq(['192.168.0.3', '192.168.0.4'])
-    expect(DatadogContextualizedLogs::CurrentContext.request_xhr).to eq('true')
+    expect(ContextualizedLogs::CurrentContext.request_uuid).to eq('request_uuid')
+    expect(ContextualizedLogs::CurrentContext.request_origin).to eq('origin')
+    expect(ContextualizedLogs::CurrentContext.request_referer).to eq('referer')
+    expect(ContextualizedLogs::CurrentContext.request_remote_addr).to eq('192.168.0.0')
+    expect(ContextualizedLogs::CurrentContext.request_remote_ip).to eq('192.168.0.1')
+    expect(ContextualizedLogs::CurrentContext.request_ip).to eq('192.168.0.2')
+    expect(ContextualizedLogs::CurrentContext.request_x_forwarded_for).to eq(['192.168.0.3', '192.168.0.4'])
+    expect(ContextualizedLogs::CurrentContext.request_xhr).to eq('true')
   end
 end
 
 class ModelContextValuesEnabledDummyController < ActionController::Base
-   include DatadogContextualizedLogs::ContextualizedController
+   include ContextualizedLogs::ContextualizedController
    enable_contextualized_models true
 
    def show
@@ -86,7 +86,7 @@ RSpec.describe ModelContextValuesEnabledDummyController, type: :controller do
 
   it 'should set enable model context values' do
     get :show, params: params
-    expect(DatadogContextualizedLogs::CurrentContext.model_context_values_enabled).to eq(true)
-    expect(DatadogContextualizedLogs::CurrentContext.context_values).to eq(values: ['value'])
+    expect(ContextualizedLogs::CurrentContext.model_context_values_enabled).to eq(true)
+    expect(ContextualizedLogs::CurrentContext.context_values).to eq(values: ['value'])
   end
 end

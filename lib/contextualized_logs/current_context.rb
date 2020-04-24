@@ -3,7 +3,7 @@
 require 'active_support'
 
 
-module DatadogContextualizedLogs
+module ContextualizedLogs
   class CurrentContext < ActiveSupport::CurrentAttributes
     # ⚠️ do not use this class to store any controller specific info..
 
@@ -20,7 +20,7 @@ module DatadogContextualizedLogs
 
     def self.context
       puts "model_context_values_enabled: #{model_context_values_enabled}"
-      # https://docs.datadoghq.com/logs/processing/attributes_naming_convention/#source-code
+      # https://docs.hq.com/logs/processing/attributes_naming_convention/#source-code
 
       data = {}
 
@@ -34,7 +34,7 @@ module DatadogContextualizedLogs
       #
       # data[:app] = { version: app_version } unless app_version.nil?
 
-      # datadog normalized
+      #  normalized
       data[:http] = {}
       data[:http][:referer] = request_referer unless request_referer.nil?
       data[:http][:request_id] = request_uuid unless request_uuid.nil?
@@ -44,7 +44,7 @@ module DatadogContextualizedLogs
       # data[:http][:sec_fetch_mode] = request_sec_fetch_mode unless request_sec_fetch_mode.nil?
       data.delete(:http) if data[:http].empty?
 
-      # datadog normalized
+      #  normalized
       data[:network] = { client: {} }
       data[:network][:client][:ip] = request_ip unless request_ip.nil? # using remote ip (we're behind proxy)
       data[:network][:client][:remote_addr] = request_remote_addr unless request_remote_addr.nil?
@@ -52,7 +52,7 @@ module DatadogContextualizedLogs
       data[:network][:client][:x_forwarded_for] = request_x_forwarded_for unless request_x_forwarded_for.nil?
       data.delete(:network) if data[:network][:client].empty?
 
-      # datadog normalized
+      #  normalized
       # data[:usr] = { id: user_id } unless user_id.nil?
 
       # eventual error response

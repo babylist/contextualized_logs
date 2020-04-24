@@ -2,7 +2,7 @@ ENV["RAILS_ENV"] ||= 'test'
 
 require 'spec_helper'
 require 'rails'
-# require "datadog_contextualized_logs/current_context"
+# require "contextualized_logs/current_context"
 require 'action_controller/railtie' # allows ActionController::Base
 require 'action_dispatch' # allows ActionDispatch::Routing
 # action_dispatch/routing.rb
@@ -59,7 +59,7 @@ RSpec.configure do |config|
 #   end
 #
   config.before(:each) do
-    DatadogContextualizedLogs::CurrentContext.reset
+    ContextualizedLogs::CurrentContext.reset
   end
 #
 end

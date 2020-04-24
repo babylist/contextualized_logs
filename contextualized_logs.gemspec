@@ -1,17 +1,17 @@
 $:.push File.expand_path("lib", __dir__)
 
 # Maintain your gem's version:
-require "datadog_contextualized_logs/version"
+require "contextualized_logs/version"
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |spec|
-  spec.name        = "datadog_contextualized_logs"
-  spec.version     = DatadogContextualizedLogs::VERSION
+  spec.name        = "contextualized_logs"
+  spec.version     = ContextualizedLogs::VERSION
   spec.authors     = ["Hugues Bernet-Rollande"]
   spec.email       = ["hugues@xdev.fr"]
-  spec.homepage    = "https://github.com/hugues/datadog_contextualized_logs"
-  spec.summary     = "Summary of DatadogContextualizedLogs."
-  spec.description = "Description of DatadogContextualizedLogs."
+  spec.homepage    = "https://github.com/hugues/contextualized_logs"
+  spec.summary     = "Summary of ContextualizedLogs."
+  spec.description = "Description of ContextualizedLogs."
   spec.license     = "MIT"
 
   spec.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]

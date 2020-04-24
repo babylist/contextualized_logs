@@ -1,4 +1,4 @@
 class Model < ActiveRecord::Base
-  include DatadogContextualizedLogs::ContextualizedModel
+  include ContextualizedLogs::ContextualizedModel
   contextualizable keys: { values: :value }
 end

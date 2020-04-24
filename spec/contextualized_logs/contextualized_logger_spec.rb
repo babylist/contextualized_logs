@@ -2,15 +2,15 @@ require 'rails_helper'
 require 'json'
 require 'timecop'
 
-module DatadogContextualizedLogs
+module ContextualizedLogs
   RSpec.describe ContextualizedLogger do
 
     before(:each) do
       Timecop.freeze(time)
-      datadog = double('datadog')
-      stub_const('Datadog', datadog)
-      allow(datadog).to receive_message_chain(:tracer, :active_correlation, :trace_id).and_return(1)
-      allow(datadog).to receive_message_chain(:tracer, :active_correlation, :span_id).and_return(2)
+      # datadog = double('Datadog')
+      # stub_const('Datadog', datadog)
+      # allow(datadog).to receive_message_chain(:tracer, :active_correlation, :trace_id).and_return(1)
+      # allow(datadog).to receive_message_chain(:tracer, :active_correlation, :span_id).and_return(2)
     end
 
     after(:each) do
@@ -46,11 +46,11 @@ module DatadogContextualizedLogs
       subject.info "hello"
 
       expect(logs.reject {|k| k == :time}).to include({
-        dd: {
-          trace_id: 1,
-          span_id: 2
-        },
-        ddsource: ['ruby'],
+        # dd: {
+        #   trace_id: 1,
+        #   span_id: 2
+        # },
+        # ddsource: ['ruby'],
         syslog: { env: 'test', host: 'a' },
         type: 'INFO',
         log_type: 'log',
@@ -70,7 +70,7 @@ module DatadogContextualizedLogs
 
       expect(logs[:log_type]).to eq('log')
       expect(logs[:error]).to eq(
-       kind: 'DatadogContextualizedLogs::MyError',
+       kind: 'ContextualizedLogs::MyError',
        message: 'error',
        stack: 'stack1; stack2'
       )
@@ -101,7 +101,7 @@ module DatadogContextualizedLogs
 
         expect(logs[:log_type]).to eq('log')
         expect(logs[:error]).to eq(
-         kind: 'DatadogContextualizedLogs::MyError',
+         kind: 'ContextualizedLogs::MyError',
          message: 'error',
          stack: 'stack1; stack2'
         )
