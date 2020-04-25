@@ -19,11 +19,11 @@ module ContextualizedLogs
             # no need to `Current.reset`
             worker_klass = worker_class.is_a?(String) ? worker_class.constantize : worker_class
             if worker_klass.include?(ContextualizedWorker)
-              current_context = worker_klass.current_context
+              current_context = ContextualizedWorker.current_context
               current_context.enqueued_jobs_ids ||= []
               current_context.enqueued_jobs_ids << job['jid']
-              current_context.contextualized_model_enabled = worker_klass.contextualized_model_enabled
-              if worker_klass.contextualized_worker_enabled
+              current_context.contextualize_model_enabled = worker_klass.contextualize_model_enabled
+              if worker_klass.contextualize_worker_enabled
                 job['context'] = current_context.to_json
                 Rails.logger.info "sidekiq: enqueing job #{worker_class}: #{job['jid']}, on queue: #{queue}"
                 Rails.logger.dump('Injecting context', JSON.parse(current_context.to_json), :debug)

@@ -25,6 +25,14 @@ gem 'puma', '~> 3.11'
 gem 'sass-rails', '~> 5.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
+gem 'ddtrace', '0.26.0' # datadog
+
+group :development, :production, :staging do
+  gem 'sidekiq', '5.0.5'
+  gem 'redis', '4.0.1'
+  gem 'lograge', '0.11.2' # datadog
+  gem 'lograge-sql', '0.4.0' # datadog
+end
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -33,8 +41,6 @@ group :development, :test do
 end
 
 group :development do
-  gem 'sidekiq', '5.0.5'
-  gem 'redis', '4.0.1'
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'web-console', '>= 3.3.0'
   gem 'listen', '>= 3.0.5', '< 3.2'

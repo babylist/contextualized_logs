@@ -13,18 +13,20 @@ module ContextualizedLogs
 
     class ContextualizedDummyWorker < DummyWorker
       include ContextualizedWorker
-      contextualized_worker true
+      contextualize_worker true
+      contextualize_model false
     end
 
     class ContextualizedModelDummyWorker < DummyWorker
       include ContextualizedWorker
-      contextualized_worker true
-      contextualized_model true
+      contextualize_worker true
+      contextualize_model true
     end
 
     class ContextualizedArgsDummyWorker < DummyWorker
       include ContextualizedWorker
-      contextualized_worker true
+      contextualize_worker true
+      contextualize_model false
 
       def self.contextualize_args(args)
         { first: args.first }
@@ -105,7 +107,7 @@ module ContextualizedLogs
     end
 
     RSpec.shared_examples 'enable model context values' do |enabled, values|
-      it 'enable model context values' do
+      it 'model context values' do
         model_id = FactoryBot.create(:model, value: 'value').id
         job = {'jid' => 1, 'context' => {request_uuid: 1}.to_json}
         worker = worker_class.new
@@ -113,7 +115,7 @@ module ContextualizedLogs
           Model.find(model_id)
         end
         expect(current_context.context_values).to eq(values)
-        expect(current_context.contextualized_model_enabled).to eq(enabled)
+        expect(current_context.contextualize_model_enabled).to eq(enabled)
       end
     end
 

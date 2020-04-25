@@ -13,13 +13,13 @@ module ContextualizedLogs
 
     class ContextualizedDummyWorker < DummyWorker
       include ContextualizedWorker
-      contextualized_worker true
+      contextualize_worker true
     end
 
     class ContextualizedModelDummyWorker < DummyWorker
       include ContextualizedWorker
-      contextualized_worker true
-      contextualized_model true
+      contextualize_worker true
+      contextualize_model true
     end
 
     subject { described_class.new }

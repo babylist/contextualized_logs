@@ -15,14 +15,14 @@ module ContextualizedLogs
             worker_klass = worker.class
             if worker_klass.include?(ContextualizedWorker)
               job_context_json = job['context']
-              current_context = worker_klass.current_context
+              current_context = ContextualizedWorker.current_context
               current_context.from_json(job_context_json) if job_context_json
               current_context.current_job_id = job['jid']
               current_context.worker = worker.class.to_s
               # https://github.com/mperham/sidekiq/wiki/Job-Format
               current_context.worker_args = worker_klass.contextualize_args(job['args']) if worker_klass.respond_to?(:contextualize_args) && job['args']
-              current_context.contextualized_model_enabled = worker_klass.contextualized_model_enabled
-              if worker_klass.contextualized_worker_enabled
+              current_context.contextualize_model_enabled = worker_klass.contextualize_model_enabled
+              if worker_klass.contextualize_worker_enabled
                 Rails.logger.info "sidekiq: performing job #{worker_klass}: #{job['jid']}, on queue #{queue}"
                 yield
                 Rails.logger.info "sidekiq: completing job #{worker_klass}: #{job['jid']}, on queue #{queue}"

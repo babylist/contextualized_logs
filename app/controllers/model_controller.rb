@@ -1,6 +1,6 @@
 class ModelController < ApplicationController
   include ContextualizedLogs::ContextualizedController
-  contextualized_model true
+  contextualize_model true
 
   def index
     models = Model.all.map { |model| { id: model.id, value: model.value} }

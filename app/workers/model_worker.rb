@@ -1,8 +1,8 @@
 class ModelWorker
   include Sidekiq::Worker
   include ContextualizedLogs::ContextualizedWorker
-  contextualized_worker true
-  contextualized_model true
+  contextualize_worker true
+  contextualize_model true
   def self.contextualize_args(args)
     { model_id: args.first, action: args.last }
   end

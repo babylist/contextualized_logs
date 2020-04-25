@@ -26,31 +26,30 @@ class MyController < ApplicationController
 end
 ```
 
-```
-curl --referer 'referer' --user-agent 'user_agent' -H "Origin: http://localhost" http://localhost/my_controller?param=a
+  $ curl --referer "referer" --user-agent "user_agent" -H "Origin: http://localhost" http://localhost/my_controller?param=a
 
-# development.log
+```json
 {
-  syslog: {
-    env: 'development',
-    host: 'localhost'
+  "syslog": {
+    "env": "development",
+    "host": "localhost"
   },
-  type: 'INFO',
-  time: '2020-04-24T19:52:51.452+02:00',
-  log_type: 'log',
-  resource_name: 'mycontroller_show',
-  http: {
-    referer: 'referer',
-    request_id: 'xxxx-xxxx-xxxx-xxxx'
-    useragent: 'user_agent',
-    origin: 'http://localhost'
+  "type": "INFO",
+  "time": "2020-04-24T19:52:51.452+02:00",
+  "log_type": "log",
+  "resource_name": "mycontroller_show",
+  "http": {
+    "referer": "referer",
+    "request_id": "xxxx-xxxx-xxxx-xxxx"
+    "useragent": "user_agent",
+    "origin": "http://localhost"
   },
-  network: {
-    client: {
-      ip: '127.0.0.1',
-      remote_addr: '127.0.0.1',
-      remote_ip: '127.0.0.1',
-      x_forwarded_for: '127.0.0.1'
+  "network": {
+    "client": {
+      "ip": "127.0.0.1",
+      "remote_addr": "127.0.0.1",
+      "remote_ip": "127.0.0.1",
+      "x_forwarded_for": "127.0.0.1"
     }
   }
 }
@@ -64,7 +63,7 @@ end
 
 class UserController < ApplicationController
   include ContextualizedLogs::ContextualizedController
-  contextualized_model true
+  contextualize_model true
 
   def show
     User.find(params[:id])
@@ -72,31 +71,30 @@ class UserController < ApplicationController
 end
 ```
 
-```
-curl http://localhost/users/1
+  $ curl http://localhost/users/1
 
-# development.log
+```json
 {
-  syslog: {
-    env: 'development',
-    host: 'localhost'
+  "syslog": {
+    "env": "development",
+    "host": "localhost"
   },
-  type: 'INFO',
-  time: '2020-04-24T19:52:51.452+02:00',
-  log_type: 'log',
-  context_values: {
-    user_ids: [1]
+  "type": "INFO",
+  "time": "2020-04-24T19:52:51.452+02:00",
+  "log_type": "log",
+  "context_values": {
+    "user_ids": [1]
   },
-  resource_name: 'mycontroller_show',
-  http: {
-    request_id: 'xxxx-xxxx-xxxx-xxxx'
+  "resource_name": "mycontroller_show",
+  "http": {
+    "request_id": "xxxx-xxxx-xxxx-xxxx"
   },
-  network: {
-    client: {
-      ip: '127.0.0.1',
-      remote_addr: '127.0.0.1',
-      remote_ip: '127.0.0.1',
-      x_forwarded_for: '127.0.0.1'
+  "network": {
+    "client": {
+      "ip": "127.0.0.1",
+      "remote_addr": "127.0.0.1",
+      "remote_ip": "127.0.0.1",
+      "x_forwarded_for": "127.0.0.1"
     }
   }
 }
@@ -118,7 +116,7 @@ end
 
 class UserController < ApplicationController
   include ContextualizedLogs::ContextualizedController
-  contextualized_model true
+  contextualize_model true
 
   def show
     user_id = params[:id]
@@ -130,8 +128,8 @@ end
 class UserTrackerWorker
   include Sidekiq::Worker
   include ContextualizedLogs::ContextualizedWorker
-  contextualized_worker true
-  contextualized_model true
+  contextualize_worker true
+  contextualize_model true
   def self.contextualize_args(args)
     { user_id: args.first, action: args.last }
   end
@@ -142,102 +140,107 @@ class UserTrackerWorker
 end
 ```
 
-```
-curl http://localhost/users/1
+  $ curl http://localhost/users/1
 
-# development.log
+```json
 {
-  syslog: {
-    env: 'development',
-    host: 'localhost'
+  "syslog": {
+    "env": "development",
+    "host": "localhost"
   },
-  type: 'INFO',
-  time: '2020-04-24T19:52:51.452+02:00',
-  log_type: 'log',
-  context_values: {
-    user_ids: [1]
+  "type": "INFO",
+  "time": "2020-04-24T19:52:51.452+02:00",
+  "log_type": "log",
+  "context_values": {
+    "user_ids": [1]
   },
-  enqueued_jobs_ids: ['1234-xxxx-xxxx-xxxx']
-  resource_name: 'mycontroller_show',
-  http: {
-    request_id: 'xxxx-xxxx-xxxx-xxxx'
+  "enqueued_jobs_ids": ["1234-xxxx-xxxx-xxxx"]
+  "resource_name": "mycontroller_show",
+  "http": {
+    "request_id": "xxxx-xxxx-xxxx-xxxx"
   },
-  network: {
-    client: {
-      ip: '127.0.0.1',
-      remote_addr: '127.0.0.1',
-      remote_ip: '127.0.0.1',
-      x_forwarded_for: '127.0.0.1'
+  "network": {
+    "client": {
+      "ip": "127.0.0.1",
+      "remote_addr": "127.0.0.1",
+      "remote_ip": "127.0.0.1",
+      "x_forwarded_for": "127.0.0.1"
     }
   }
 }
+```
+
+```json
 {
-  syslog: {
-    env: 'development',
-    host: 'localhost'
+  "syslog": {
+    "env": "development",
+    "host": "localhost"
   },
-  type: 'INFO',
-  time: '2020-04-24T19:52:51.452+02:00',
-  log_type: 'log',
-  message: 'sidekiq: completing job UserWorker: 1234-xxxx-xxxx-xxxx, on queue default',
-  job: {
-    worker: 'UserWorker',
-    id: '1234-xxxx-xxxx-xxxx',
-    args: {
-      user_id: 1,
-      action: 'show'
+  "type": "INFO",
+  "time": "2020-04-24T19:52:51.452+02:00",
+  "log_type": "log",
+  "message": "sidekiq: completing job UserWorker: 1234-xxxx-xxxx-xxxx, on queue default",
+  "job": {
+    "worker": "UserWorker",
+    "id": "1234-xxxx-xxxx-xxxx",
+    "args": {
+      "user_id": 1,
+      "action": "show"
     }
   }
-  context_values: {
-    user_ids: [1],
-    user_tracker_ids: [1]
+  "context_values": {
+    "user_ids": [1],
+    "user_tracker_ids": [1]
   },
-  enqueued_jobs_ids: ['xxxx-xxxx-xxxx-xxxx']
-  resource_name: 'mycontroller_show',
-  http: {
-    request_id: 'xxxx-xxxx-xxxx-xxxx'
+  "enqueued_jobs_ids": ["xxxx-xxxx-xxxx-xxxx"]
+  "resource_name": "mycontroller_show",
+  "http": {
+    "request_id": "xxxx-xxxx-xxxx-xxxx"
   },
-  network: {
-    client: {
-      ip: '127.0.0.1',
-      remote_addr: '127.0.0.1',
-      remote_ip: '127.0.0.1',
-      x_forwarded_for: '127.0.0.1'
+  "network": {
+    "client": {
+      "ip": "127.0.0.1",
+      "remote_addr": "127.0.0.1",
+      "remote_ip": "127.0.0.1",
+      "x_forwarded_for": "127.0.0.1"
     }
   }
 }
+```
+
+```json
 {
-  syslog: {
-    env: 'development',
-    host: 'localhost'
+  "syslog": {
+    "env": "development",
+    "host": "localhost"
   },
-  type: 'INFO',
-  time: '2020-04-24T19:52:51.452+02:00',
-  log_type: 'log',
-  message: 'sidekiq: completing job UserWorker: 1234-xxxx-xxxx-xxxx, on queue default',
-  job: {
-    worker: 'UserWorker',
-    id: '1234-xxxx-xxxx-xxxx',
-    args: {
-      user_id: 1,
-      action: 'show'
+  "type": "INFO",
+  "time": "2020-04-24T19:52:51.452+02:00",
+  "log_type": "log",
+  "message": "sidekiq: completing job UserWorker: 1234-xxxx-xxxx-xxxx, on queue default",
+  "job": {
+    "worker": "UserWorker",
+    "id": "1234-xxxx-xxxx-xxxx",
+    "args": {
+      "user_id": 1,
+      "action": "show"
     }
   }
-  context_values: {
-    user_ids: [1],
-    user_tracker_ids: [1]
+  "context_values": {
+    "user_ids": [1],
+    "user_tracker_ids": [1]
   },
-  enqueued_jobs_ids: ['xxxx-xxxx-xxxx-xxxx']
-  resource_name: 'mycontroller_show',
-  http: {
-    request_id: 'xxxx-xxxx-xxxx-xxxx'
+  "enqueued_jobs_ids": ["xxxx-xxxx-xxxx-xxxx"]
+  "resource_name": "mycontroller_show",
+  "http": {
+    "request_id": "xxxx-xxxx-xxxx-xxxx"
   },
-  network: {
-    client: {
-      ip: '127.0.0.1',
-      remote_addr: '127.0.0.1',
-      remote_ip: '127.0.0.1',
-      x_forwarded_for: '127.0.0.1'
+  "network": {
+    "client": {
+      "ip": "127.0.0.1",
+      "remote_addr": "127.0.0.1",
+      "remote_ip": "127.0.0.1",
+      "x_forwarded_for": "127.0.0.1"
     }
   }
 }
@@ -246,23 +249,22 @@ curl http://localhost/users/1
 ## Demo
 
 ### start rails
- ```
- bin/setup
- bin/rails server
- ```
+
+  $ bin/setup
+  $ bin/rails server
 
 ### start sidekiq
- ```
- bundle exec sidekiq
- ```
+
+  $ bundle exec sidekiq
+
 
 ### tail logs
- ```
- tail -f log/development
- ```
+
+  $ tail -f log/development
 
 ### do some requests
- ```
+
+```
 curl -X POST -d '{"value": "value"}' -H 'Content-Type: application/json' "http://localhost:3000/model"
 curl "http://localhost:3000/model/1"
 curl "http://localhost:3000/model"
@@ -305,7 +307,7 @@ class Model < ActiveRecord::Base
 end
 ```
 
-If `ContextualizedLogs::CurrentContext.contextualized_model_enabled` is enable on the current tread, any Model which is created or find will add `{ context_values: { model_ids: ids } }`.
+If `ContextualizedLogs::CurrentContext.contextualize_model_enabled` is enable on the current tread, any Model which is created or find will add `{ context_values: { model_ids: ids } }`.
 So if you fetch model (`id == 1`), and create model (`id == 2`), your logs will now contain `{ context_values: { model_ids: [1, 2] } }`.
 
 ### ContextualizedWorker
@@ -313,8 +315,8 @@ So if you fetch model (`id == 1`), and create model (`id == 2`), your logs will 
 ```
 class Worker
   include ContextualizedLogs::ContextualizedWorker
-  contextualized_worker true # enable logging of job enqueuing, performing, completing and failure
-  contextualized_model true # enable logging of any (contextualized) model found or created while performing job
+  contextualize_worker true # enable logging of job enqueuing, performing, completing and failure
+  contextualize_model true # enable logging of any (contextualized) model found or created while performing job
 
   # enable adding jobs args (cherry picked) to log metadata (CurrentContext) to be logged alongs any job logs
   def self.contextualize_args(args)
@@ -323,12 +325,70 @@ class Worker
 end
 ```
 
-If `ContextualizedLogs::CurrentContext.contextualized_model_enabled` is enable on the current tread, any Model which is created or find will add `{ context_values: { model_ids: ids } }`.
+If `ContextualizedLogs::CurrentContext.contextualize_model_enabled` is enable on the current tread, any Model which is created or find will add `{ context_values: { model_ids: ids } }`.
 So if you fetch model (`id == 1`), and create model (`id == 2`), your logs will now contain `{ context_values: { model_ids: [1, 2] } }`.
 
-#### Metadata Customization
+## Configuration
 
-If you wish to logs different predefined metadata (`request.uuid`, `request.ip`, ...)
+`ContextualizedLogs` work with zero configuration by default.
+
+It will log:
+  - basic request info (`http.request_id`, ....) on each (contextualized) controller
+  - basic job info (`enqueued_jobs_ids` on controller which enqueue the job, `job.worker, job.id` on each worker logs, and one log for `enqueuing`, `started`, `processing`, `completing`, [`failure`]) on each (contextualized) worker
+  - contextualized models are not logged by default, and needs to be enable on each controller, worker
+
+If you wish to logs different predefined metadata (`request.uuid`, `request.ip`, ...), or logging mechanism, you can use an initializer `ContextualizedLogs.configure`.
+
+```ruby
+# config/initializers/contextualized_logs.rb
+require 'contextualized_logs'
+
+module ContextualizedLogs
+  configure do |config|
+    # enable logging of contextualized model values in all (contextualized) controller by default
+    # can be manually enabled on each controller otherwise (contextualize_model true)
+    config.controller_default_contextualize_model = true # default: false
+    # enable logging of worker enqueing/performing/completing/[failure] in all (contextualized) worker by default
+    # can be manually enabled on each worker otherwise (contextualize_worker true)
+    config.worker_default_contextualize_worker = true # default: true
+    # enable logging of contextualized model values in all (contextualized) worker by default
+    # can be manually enabled on each worker otherwise (contextualize_model true)
+    config.worker_default_contextualize_model = true # default: false
+    # customize logs at Logger level (not in context of a controller request or worker job)
+    config.log_formatter = proc do |severity, timestamp, progname, msg|
+      # call the default formatter
+      log = ContextualizedLogger.default_formatter.call(severity, timestamp, progname, msg)
+      # enhance log with Datadog APM trace correlation
+      log = JSON.parse(log)
+      datadog_correlation = Datadog.tracer.active_correlation
+      log.merge!(
+        dd: {
+          trace_id: datadog_correlation.trace_id,
+          span_id: datadog_correlation.span_id
+        },
+        ddsource: ['ruby']
+      )
+      # add your own log
+      log.merge!(
+        my_custom_log_value: 'my_custom_log_value'
+      )
+      log.to_json + "\n"
+    end
+    # customize logs extracted from controller (ie: request, ...)
+    config.controller_default_contextualizer = proc do |controller|
+      # call the default request logging
+      ContextualizedController.contextualize_request(controller)
+      if controller.current_user
+        ContextualizedController.current_context.attributes.merge!(
+          usr: {
+            id: controller.current_user.id
+          }
+        )
+      end
+    end
+  end
+end
+```
 
 ## Installation
 
@@ -355,8 +415,6 @@ And then execute:
 
 ```
 $ rake
-The dependency tzinfo-data (>= 0) will be unused by any of the platforms Bundler is installing for. Bundler is installing for ruby but the dependency is only for x86-mingw32, x86-mswin32, x64-mingw32, java. To add those platforms to the bundle, run `bundle lock --add-platform x86-mingw32 x86-mswin32 x64-mingw32 java`.
-/Users/hugues/.rvm/rubies/ruby-2.5.1/bin/ruby -I/Users/hugues/.rvm/gems/ruby-2.5.1/gems/rspec-core-3.8.2/lib:/Users/hugues/.rvm/gems/ruby-2.5.1/gems/rspec-support-3.8.3/lib /Users/hugues/.rvm/gems/ruby-2.5.1/gems/rspec-core-3.8.2/exe/rspec --pattern spec/\*\*\{,/\*/\*\*\}/\*_spec.rb
 
 DummyController
   should set request details
@@ -382,18 +440,18 @@ ContextualizedLogs::ContextualizedModel
   .contextualizable
     set contextualizable keys
   .contextualize
-    with contextualized_model_enabled == true
+    with contextualize_model_enabled == true
       set contextualizable values
-    with contextualized_model_enabled == false
+    with contextualize_model_enabled == false
       set contextualizable values
-  with CurrentContext.contextualized_model_enabled == true
+  with CurrentContext.contextualize_model_enabled == true
     behaves like after_create context
       .after_create
         set context
     behaves like after_find context
       .after_find
         does
-  with CurrentContext.contextualized_model_enabled == false
+  with CurrentContext.contextualize_model_enabled == false
     behaves like after_create context
       .after_create
         set context
@@ -424,7 +482,7 @@ ContextualizedLogs::Sidekiq::Middleware::Server::RestoreCurrentContext
     behaves like it server yield
       should eq true
     behaves like enable model context values
-      enable model context values
+      model context values
   with contextualized worker
     behaves like it server yield
       should eq true
@@ -433,7 +491,7 @@ ContextualizedLogs::Sidekiq::Middleware::Server::RestoreCurrentContext
     behaves like log with context
       log with context
     behaves like enable model context values
-      enable model context values
+      model context values
   with contextualized model worker
     behaves like it server yield
       should eq true
@@ -442,7 +500,7 @@ ContextualizedLogs::Sidekiq::Middleware::Server::RestoreCurrentContext
     behaves like log with context
       log with context
     behaves like enable model context values
-      enable model context values
+      model context values
   with contextualized model worker
     log with args
     behaves like it server yield
@@ -452,13 +510,17 @@ ContextualizedLogs::Sidekiq::Middleware::Server::RestoreCurrentContext
     behaves like log with context
       log with context
     behaves like enable model context values
-      enable model context values
+      model context values
 
 ContextualizedLogs
   has a version number
 
-Finished in 0.73283 seconds (files took 1.34 seconds to load)
-46 examples, 0 failures
+CustomContextController
+  should set request details
+  should set custom attributes
+
+Finished in 0.83906 seconds (files took 1.56 seconds to load)
+48 examples, 0 failures
 ```
 
 ## Development
