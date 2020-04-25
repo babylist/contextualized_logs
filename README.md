@@ -40,7 +40,7 @@ end
   "resource_name": "mycontroller_show",
   "http": {
     "referer": "referer",
-    "request_id": "xxxx-xxxx-xxxx-xxxx"
+    "request_id": "xxxx-xxxx-xxxx-xxxx",
     "useragent": "user_agent",
     "origin": "http://localhost"
   },
