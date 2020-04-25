@@ -26,7 +26,7 @@ class MyController < ApplicationController
 end
 ```
 
-  $ curl --referer "referer" --user-agent "user_agent" -H "Origin: http://localhost" http://localhost/my_controller?param=a
+    $ curl --referer "referer" --user-agent "user_agent" -H "Origin: http://localhost" http://localhost/my_controller?param=a
 
 ```json
 {
@@ -71,7 +71,7 @@ class UserController < ApplicationController
 end
 ```
 
-  $ curl http://localhost/users/1
+    $ curl http://localhost/users/1
 
 ```json
 {
@@ -140,7 +140,7 @@ class UserTrackerWorker
 end
 ```
 
-  $ curl http://localhost/users/1
+    $ curl http://localhost/users/1
 
 ```json
 {
@@ -154,7 +154,7 @@ end
   "context_values": {
     "user_ids": [1]
   },
-  "enqueued_jobs_ids": ["1234-xxxx-xxxx-xxxx"]
+  "enqueued_jobs_ids": ["1234-xxxx-xxxx-xxxx"],
   "resource_name": "mycontroller_show",
   "http": {
     "request_id": "xxxx-xxxx-xxxx-xxxx"
@@ -187,12 +187,12 @@ end
       "user_id": 1,
       "action": "show"
     }
-  }
+  },
   "context_values": {
     "user_ids": [1],
     "user_tracker_ids": [1]
   },
-  "enqueued_jobs_ids": ["xxxx-xxxx-xxxx-xxxx"]
+  "enqueued_jobs_ids": ["xxxx-xxxx-xxxx-xxxx"],
   "resource_name": "mycontroller_show",
   "http": {
     "request_id": "xxxx-xxxx-xxxx-xxxx"
@@ -225,12 +225,12 @@ end
       "user_id": 1,
       "action": "show"
     }
-  }
+  },
   "context_values": {
     "user_ids": [1],
     "user_tracker_ids": [1]
   },
-  "enqueued_jobs_ids": ["xxxx-xxxx-xxxx-xxxx"]
+  "enqueued_jobs_ids": ["xxxx-xxxx-xxxx-xxxx"],
   "resource_name": "mycontroller_show",
   "http": {
     "request_id": "xxxx-xxxx-xxxx-xxxx"
