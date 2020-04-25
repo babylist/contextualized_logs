@@ -1,4 +1,4 @@
 class Model < ActiveRecord::Base
   include ContextualizedLogs::ContextualizedModel
-  contextualizable keys: { values: :value }
+  contextualizable keys: { model_ids: :id, model_values: :value }
 end

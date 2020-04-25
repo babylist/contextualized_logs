@@ -90,6 +90,6 @@ RSpec.describe ContextualizedModelDummyController, type: :controller do
   it 'should set enable model context values' do
     get :show, params: params
     expect(current_context.contextualize_model_enabled).to eq(true)
-    expect(current_context.context_values).to eq(values: ['value'])
+    expect(current_context.context_values).to eq(model_values: ['value'], model_ids: [model.id])
   end
 end

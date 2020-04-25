@@ -94,7 +94,7 @@ module ContextualizedLogs
             subject.call(worker_class, { 'jid' => 1 }, '', nil) do
               Model.find(model.id)
             end
-            expect(current_context.context_values).to eq(values: ['value'])
+            expect(current_context.context_values).to eq(model_values: ['value'], model_ids: [model.id])
           end
         end
       end

@@ -106,15 +106,19 @@ module ContextualizedLogs
       end
     end
 
-    RSpec.shared_examples 'enable model context values' do |enabled, values|
+    RSpec.shared_examples 'enable model context values' do |enabled|
       it 'model context values' do
-        model_id = FactoryBot.create(:model, value: 'value').id
+        model = FactoryBot.create(:model)
         job = {'jid' => 1, 'context' => {request_uuid: 1}.to_json}
         worker = worker_class.new
         subject.call(worker, job, nil) do
-          Model.find(model_id)
+          Model.find(model.id)
         end
-        expect(current_context.context_values).to eq(values)
+        if enabled
+          expect(current_context.context_values).to eq(model_values: [model.value], model_ids: [model.id])
+        else
+          expect(current_context.context_values).to eq(nil)
+        end
         expect(current_context.contextualize_model_enabled).to eq(enabled)
       end
     end
@@ -144,7 +148,7 @@ module ContextualizedLogs
         }.to raise_error StandardError
       end
 
-      it_behaves_like 'enable model context values', nil, nil
+      it_behaves_like 'enable model context values', nil
     end
 
     context 'with contextualized worker' do
@@ -153,7 +157,7 @@ module ContextualizedLogs
       it_behaves_like 'it server yield'
       it_behaves_like 'log job failure'
       it_behaves_like 'log with context'
-      it_behaves_like 'enable model context values', false, nil
+      it_behaves_like 'enable model context values', false
     end
 
     context 'with contextualized model worker' do
@@ -162,7 +166,7 @@ module ContextualizedLogs
       it_behaves_like 'it server yield'
       it_behaves_like 'log job failure'
       it_behaves_like 'log with context'
-      it_behaves_like 'enable model context values', true, { values: ['value']}
+      it_behaves_like 'enable model context values', true
     end
 
     context 'with contextualized model worker' do
@@ -171,7 +175,7 @@ module ContextualizedLogs
       it_behaves_like 'it server yield'
       it_behaves_like 'log job failure'
       it_behaves_like 'log with context'
-      it_behaves_like 'enable model context values', false, nil
+      it_behaves_like 'enable model context values', false
 
       it 'log with args' do
         job = { 'jid' => 1, 'context' => { request_uuid: 1 }.to_json, 'args' => ['first', 'second'] }

@@ -519,7 +519,7 @@ CustomContextController
   should set request details
   should set custom attributes
 
-Finished in 0.83906 seconds (files took 1.56 seconds to load)
+Finished in 1.27 seconds (files took 1.58 seconds to load)
 48 examples, 0 failures
 ```
 
