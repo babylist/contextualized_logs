@@ -8,13 +8,14 @@ module ContextualizedLogs
       log = JSON.parse(log)
       # set log <> APM trace correlation
       datadog_correlation = Datadog.tracer.active_correlation
-      log.merge(
+      log.merge!(
         dd: {
           trace_id: datadog_correlation.trace_id,
           span_id: datadog_correlation.span_id
         },
         ddsource: ['ruby']
-      ).to_json + "\n"
+      )
+      JSON.pretty_generate(log) + "\n"
     end
     config.controller_default_contextualizer = proc do |controller|
       ContextualizedController.default_contextualize_request(controller)
