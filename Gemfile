@@ -30,8 +30,8 @@ gem 'ddtrace', '0.26.0' # datadog
 group :development, :production, :staging do
   gem 'sidekiq', '5.0.5'
   gem 'redis', '4.0.1'
-  gem 'lograge', '0.11.2' # datadog
-  gem 'lograge-sql', '0.4.0' # datadog
+  gem 'lograge', '0.11.2'
+  gem 'lograge-sql', '0.4.0'
 end
 
 group :development, :test do

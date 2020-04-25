@@ -17,6 +17,10 @@ module ContextualizedLogs
       @config || Config.default
     end
 
+    def current_context
+      config.current_context
+    end
+
     def configure(&block)
       config = Config.default
       block.call(config)

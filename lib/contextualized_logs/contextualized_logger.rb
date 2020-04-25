@@ -13,18 +13,10 @@ module ContextualizedLogs
       def current_context
         @current_context || ContextualizedLogs.config.current_context
       end
-      
+
       def default_formatter
         proc do |severity, timestamp, progname, msg|
-          # format (and enrich) log in JSON format (-> )
-          # https://docs.hq.com/logs/processing/attributes_naming_convention/#source-code
-          # correlation = Datadog.tracer.active_correlation
           data = {
-            # dd: {
-            #   trace_id: correlation.trace_id,
-            #   span_id: correlation.span_id
-            # },
-            # ddsource: ['ruby'],
             syslog: { env: Rails.env, host: Socket.gethostname },
             type: severity.to_s,
             time: timestamp

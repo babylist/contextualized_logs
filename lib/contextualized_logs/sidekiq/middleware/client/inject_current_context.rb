@@ -26,7 +26,7 @@ module ContextualizedLogs
               if worker_klass.contextualize_worker_enabled
                 job['context'] = current_context.to_json
                 Rails.logger.info "sidekiq: enqueing job #{worker_class}: #{job['jid']}, on queue: #{queue}"
-                Rails.logger.dump('Injecting context', JSON.parse(current_context.to_json), :debug)
+                # Rails.logger.dump('Injecting context', JSON.parse(current_context.to_json), :debug)
               end
             end
             yield
