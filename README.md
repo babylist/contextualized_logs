@@ -264,7 +264,7 @@ end
 
 ### do some requests
 
-```
+```shell
 curl -X POST -d '{"value": "value"}' -H 'Content-Type: application/json' "http://localhost:3000/model"
 curl "http://localhost:3000/model/1"
 curl "http://localhost:3000/model"
@@ -280,7 +280,7 @@ In order to enrich your logs, you needs to use (subclass of `ActiveSupport::Logg
 > ContextualizedLogger logs by default some request metadata following Datadog naming convention
 > https://docs.hq.com/logs/processing/attributes_naming_convention/#source-code
 
-```
+```ruby
 Rails.application.configure do
   config.logger = ContextualizedLogs::ContextualizedLogger.new("log/#{Rails.env}.log")
 end
@@ -288,7 +288,7 @@ end
 
 ### ContextualizedController
 
-```
+```ruby
 class Controller < ApplicationController
   include ContextualizedLogs::ContextualizedController
 end
@@ -298,7 +298,7 @@ end
 
 ### ContextualizedModel
 
-```
+```ruby
 class Model < ActiveRecord::Base
   include ContextualizedLogs::ContextualizedModel
 
@@ -312,7 +312,7 @@ So if you fetch model (`id == 1`), and create model (`id == 2`), your logs will 
 
 ### ContextualizedWorker
 
-```
+```ruby
 class Worker
   include ContextualizedLogs::ContextualizedWorker
   contextualize_worker true # enable logging of job enqueuing, performing, completing and failure
@@ -413,7 +413,7 @@ And then execute:
 
 ## Specs
 
-```
+```shell
 $ rake
 
 DummyController
