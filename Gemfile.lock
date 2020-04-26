@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    contextualized_logs (0.0.3.pre.alpha)
+    contextualized_logs (0.0.4.pre.alpha)
 
 GEM
   remote: https://rubygems.org/
