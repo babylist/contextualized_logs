@@ -22,9 +22,9 @@ Rails.application.configure do
   config.lograge.enabled = true
   config.colorize_logging = false
   # We are asking here to log in RAW (which are actually ruby hashes). The Ruby logging is going to take care of the JSON formatting.
-  config.lograge.formatter = Lograge::Formatters::Json.new
+  # config.lograge.formatter = Lograge::Formatters::Json.new
   # for local debug, dump log in JSON pretty format
-  # config.lograge.formatter = Lograge::Formatters::PrettyJson.new
+  config.lograge.formatter = Lograge::Formatters::PrettyJson.new
   # keep existing log
   config.lograge.keep_original_rails_log = false
   # issue with existing rails logger and prefixing.. logging to different file

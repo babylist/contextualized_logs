@@ -15,9 +15,9 @@ module ContextualizedLogs
         },
         ddsource: ['ruby']
       )
-      log.to_json + "\n"
+      # log.to_json + "\n"
       # for local debug, dump log in JSON pretty format
-      # JSON.pretty_generate(log) + "\n"
+      JSON.pretty_generate(log) + "\n"
     end
     config.controller_default_contextualizer = proc do |controller|
       ContextualizedController.default_contextualize_request(controller)
