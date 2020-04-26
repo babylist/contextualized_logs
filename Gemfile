@@ -26,6 +26,7 @@ gem 'sass-rails', '~> 5.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
 gem 'ddtrace', '0.26.0' # datadog
+gem 'tty-prompt', '0.19.0'
 
 group :development, :production, :staging do
   gem 'sidekiq', '5.0.5'

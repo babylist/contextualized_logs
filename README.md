@@ -248,6 +248,10 @@ end
 
 ## Demo
 
+    $ rake demo
+
+[![asciicast](https://asciinema.org/a/324084.svg)](https://asciinema.org/a/324084)
+
 ### start rails
 
   $ bin/setup
