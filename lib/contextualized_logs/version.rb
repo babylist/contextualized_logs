@@ -1,3 +1,3 @@
 module ContextualizedLogs
-  VERSION = '0.0.4-demo'
+  VERSION = '0.0.5-alpha'
 end
