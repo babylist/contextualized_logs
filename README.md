@@ -286,7 +286,9 @@ Thanks to [Asciinema](https://asciinema.org)!
 
 Contextualized Logs is particuly useful if you have a online service to parse/search the logs, like [Datadog](https://www.datadoghq.com).
 
-Here is a video of log searching using Datadog: [here](https://huguesbr-public.s3-us-west-1.amazonaws.com/datadog.mp4)
+Here is a video of log searching using Datadog
+
+[![Watch the demo on Youtube](https://img.youtube.com/vi/cajUbtNF_AI/maxresdefault.jpg)](https://youtu.be/cajUbtNF_AI)
 
 ## Usage
 
