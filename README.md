@@ -248,27 +248,23 @@ end
 
 ## Demo
 
-Thanks to [Asciinema](https://asciinema.org)!
+### Rails Demo
 
-    $ rake demo
 
-[![asciicast](https://asciinema.org/a/324084.svg)](https://asciinema.org/a/324084)
-
-### start rails
+#### start rails
 
   $ bin/setup
   $ bin/rails server
 
-### start sidekiq
+#### start sidekiq
 
   $ bundle exec sidekiq
 
-
-### tail logs
+#### tail logs
 
   $ tail -f log/development
 
-### do some requests
+#### do some requests
 
 ```shell
 curl -X POST -d '{"value": "value"}' -H 'Content-Type: application/json' "http://localhost:3000/model"
@@ -276,6 +272,23 @@ curl "http://localhost:3000/model/1"
 curl "http://localhost:3000/model"
 curl -X DELETE "http://localhost:3000/model/1"
 ```
+
+### Asciinema
+
+Thanks to [Asciinema](https://asciinema.org)!
+
+    $ rake demo
+
+[![asciicast](https://asciinema.org/a/324084.svg)](https://asciinema.org/a/324084)
+
+
+### Datadog
+
+Contextualized Logs is particuly useful if you have a online service to parse/search the logs, like [Datadog](https://www.datadoghq.com).
+
+Here is a video of log searching using [Datadog](https://www.datadoghq.com)
+
+<video src="https://huguesbr-public.s3-us-west-1.amazonaws.com/datadog.mp4" width="960" height="600" controls preload></video>
 
 ## Usage
 
