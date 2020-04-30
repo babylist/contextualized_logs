@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.email       = ["engineering@babylist.com"]
   spec.homepage    = "https://github.com/babylist/contextualized_logs"
   spec.metadata    = {
-    "homepage_uri" =>  "https://github.com/babylist/contextualized_logs/README.md",
+    "homepage_uri" =>  "https://github.com/babylist/contextualized_logs",
     "source_code_uri" => "https://github.com/babylist/contextualized_logs"
   }
   spec.summary     = "Contextualize your logs (requests params, found/created model metadata, workers, ...)"
