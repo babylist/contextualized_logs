@@ -10,6 +10,10 @@ Gem::Specification.new do |spec|
   spec.authors     = ["Hugues Bernet-Rollande"]
   spec.email       = ["engineering@babylist.com"]
   spec.homepage    = "https://github.com/babylist/contextualized_logs"
+  spec.metadata    = {
+    "homepage_uri" =>  "https://github.com/babylist/contextualized_logs/README.md",
+    "source_code_uri" => "https://github.com/babylist/contextualized_logs"
+  }
   spec.summary     = "Contextualize your logs (requests params, found/created model metadata, workers, ...)"
   spec.description = <<~EOF
   Online logging solution (like [Datadog](https://www.datadoghq.com)) have drastically transform the way we log.
