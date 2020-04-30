@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.name        = "contextualized_logs"
   spec.version     = ContextualizedLogs::VERSION
   spec.authors     = ["Hugues Bernet-Rollande"]
-  spec.email       = ["hugues@xdev.fr"]
-  spec.homepage    = "https://github.com/hugues/contextualized_logs"
+  spec.email       = ["engineering@babylist.com"]
+  spec.homepage    = "https://github.com/babylist/contextualized_logs"
   spec.summary     = "Contextualize your logs (requests params, found/created model metadata, workers, ...)"
   spec.description = <<~EOF
   Online logging solution (like [Datadog](https://www.datadoghq.com)) have drastically transform the way we log.
