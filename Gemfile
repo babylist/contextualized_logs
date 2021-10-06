@@ -29,7 +29,7 @@ gem 'ddtrace', '0.26.0' # datadog
 gem 'tty-prompt', '0.19.0'
 
 group :development, :production, :staging do
-  gem 'sidekiq', '5.0.5'
+  gem 'sidekiq', '5.2.9'
   gem 'redis', '4.0.1'
   gem 'lograge', '0.11.2'
   gem 'lograge-sql', '0.4.0'
