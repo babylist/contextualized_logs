@@ -203,7 +203,7 @@ GEM
       tty-screen (~> 0.7)
       wisper (~> 2.0.0)
     tty-screen (0.7.1)
-    tzinfo (1.2.7)
+    tzinfo (1.2.10)
       thread_safe (~> 0.1)
     web-console (3.7.0)
       actionview (>= 5.0)
